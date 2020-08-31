@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './card.styles.scss';
 import Task from '../Task/Task';
 import moment from 'moment';
