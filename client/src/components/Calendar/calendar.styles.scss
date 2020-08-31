@@ -1,0 +1,12 @@
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80vw;
+  height: 50rem;
+}
+
+.main-container {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
