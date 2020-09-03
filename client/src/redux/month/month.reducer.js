@@ -85,8 +85,10 @@ const monthReducer = (state = INITAL_STATE, action) => {
         ...state,
       };
     case MonthTypes.REMOVE_POINTS:
+      filteredDay = filterDay(state, action);
+      filteredDay[0].totalPoints -= parseInt(action.payload.amount);
       state.totalPoints =
-        parseInt(state.totalPoints) - parseInt(action.payload);
+        parseInt(state.totalPoints) - parseInt(action.payload.amount);
       saveToStorage(state);
       return {
         ...state,

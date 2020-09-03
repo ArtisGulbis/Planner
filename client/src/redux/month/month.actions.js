@@ -23,12 +23,12 @@ export const setData = () => (dispatch) => {
       name: currentMonth,
       amountOfDays: daysInMonth,
       days: dayArray.reverse(),
+      totalPoints: 0,
     };
 
     data = monthData;
 
     localStorage.setItem(currentMonth, JSON.stringify(monthData));
-
     dispatch({ type: MonthTypes.SET_DATA, payload: data });
   }
 };
@@ -56,8 +56,8 @@ export const addPoints = (amount, number) => (dispatch) => {
   });
 };
 
-export const removePoints = (amount) => (dispatch) => {
-  dispatch({ type: MonthTypes.REMOVE_POINTS, payload: amount });
+export const removePoints = (amount, number) => (dispatch) => {
+  dispatch({ type: MonthTypes.REMOVE_POINTS, payload: { amount, number } });
 };
 
 export const setCompleted = (value, number, id) => (dispatch) => {

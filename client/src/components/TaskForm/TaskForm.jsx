@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTask } from '../../redux/month/month.actions';
 import { v4 } from 'uuid';
+import { showFormForTask } from '../../redux/form/form.actions';
+import './taskform.styles.scss';
 
 const TaskForm = ({ monthDayNumber }) => {
   const dispatch = useDispatch();
@@ -41,13 +43,13 @@ const TaskForm = ({ monthDayNumber }) => {
   return (
     <form
       id={`task-form-${monthDayNumber}`}
-      className='task-form'
+      className="create-task-form"
       data-id={monthDayNumber}
       onSubmit={(e) => handleSubmit(e)}
     >
       <input
-        placeholder='Points...'
-        type='number'
+        placeholder="Points..."
+        type="number"
         value={points}
         onChange={(e) => {
           setError('');
@@ -55,8 +57,8 @@ const TaskForm = ({ monthDayNumber }) => {
         }}
       ></input>
       <input
-        placeholder='Task...'
-        type='text'
+        placeholder="Task..."
+        type="text"
         value={taskInput}
         onChange={(e) => {
           setError('');
@@ -64,8 +66,8 @@ const TaskForm = ({ monthDayNumber }) => {
         }}
       ></input>
       <input
-        type='number'
-        placeholder='Duration...'
+        type="number"
+        placeholder="Duration..."
         value={duration}
         onChange={(e) => {
           setError('');
@@ -73,11 +75,19 @@ const TaskForm = ({ monthDayNumber }) => {
         }}
       ></input>
       <select onChange={(e) => setTimeType(e.target.value)}>
-        <option value='min'>Minute(s)</option>
-        <option value='h'>Hour(s)</option>
+        <option value="min">Minute(s)</option>
+        <option value="h">Hour(s)</option>
       </select>
       {error && <p>{error}</p>}
-      <button type='submit'>Create</button>
+      <button type="submit">Create</button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          dispatch(showFormForTask(monthDayNumber));
+        }}
+      >
+        cancel
+      </button>
     </form>
   );
 };

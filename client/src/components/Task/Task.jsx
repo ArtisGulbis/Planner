@@ -14,12 +14,12 @@ const Task = ({ task, monthDayNumber }) => {
   const handleChande = (e) => {
     dispatch(setCompleted(!task.completed, monthDayNumber, task.id));
     task.completed && dispatch(addPoints(task.points, monthDayNumber));
-    !task.completed && dispatch(removePoints(task.points));
+    !task.completed && dispatch(removePoints(task.points, monthDayNumber));
   };
   return (
-    <div className='task-container' data-id={task.id}>
+    <div className="task-container" data-id={task.id}>
       <input
-        type='checkbox'
+        type="checkbox"
         checked={task.completed}
         onChange={(e) => handleChande(e)}
       ></input>

@@ -4,7 +4,6 @@ import './calendar.styles.scss';
 import Card from '../Card/Card';
 import { setData } from '../../redux/month/month.actions';
 import { v4 } from 'uuid';
-import CreateTask from '../CreateTasks/CreateTasks';
 
 const Calendar = () => {
   const dispatch = useDispatch();
@@ -17,10 +16,10 @@ const Calendar = () => {
   });
 
   return (
-    <div className='main-container'>
-      <h1 className='month-name'>{monthName}</h1>
+    <div className="main-container">
+      <h1 className="month-name">{monthName}</h1>
       <h2>{totalPoints}</h2>
-      <div className='card-container' key={v4()}>
+      <div className="card-container" key={v4()}>
         {days.map((day, i) => {
           return (
             <Card
