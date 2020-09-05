@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './calendar.styles.scss';
 import Card from '../Card/Card';
@@ -16,10 +16,10 @@ const Calendar = () => {
   });
 
   return (
-    <div className="main-container">
-      <h1 className="month-name">{monthName}</h1>
+    <div className='calendar-container'>
+      <h1 className='month-name'>{monthName}</h1>
       <h2>{totalPoints}</h2>
-      <div className="card-container" key={v4()}>
+      <div className='card-container' key={v4()}>
         {days.map((day, i) => {
           return (
             <Card
