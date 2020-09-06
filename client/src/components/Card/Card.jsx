@@ -21,7 +21,7 @@ const Card = ({ monthDayNumber, tasks, totalPoints }) => {
         <Task key={task.id} task={task} monthDayNumber={monthDayNumber}></Task>
       ))}
       <button onClick={(e) => dispatch(showFormForTask(monthDayNumber))}>
-        create
+        Add
       </button>
     </div>
   );

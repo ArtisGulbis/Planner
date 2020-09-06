@@ -13,6 +13,7 @@ const TaskForm = () => {
   const [error, setError] = useState('');
   const [duration, setDuration] = useState('');
   const [timeType, setTimeType] = useState('min');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,8 +43,14 @@ const TaskForm = () => {
     setTaskInput('');
     setPoints('');
     setDuration('');
+    setSuccessMessage('Task added');
 
     dispatch(addTask(task, parseInt(e.target.dataset.id)));
+  };
+
+  const clearErrorAndSuccess = () => {
+    setError('');
+    setSuccessMessage('');
   };
 
   return (
@@ -59,20 +66,20 @@ const TaskForm = () => {
           className='create-task-form__item task'
           placeholder='Task...'
           type='text'
+          autoFocus={true}
           value={taskInput}
           onChange={(e) => {
-            setError('');
+            clearErrorAndSuccess();
             setTaskInput(e.target.value);
           }}
         ></input>
         <input
           placeholder='Points...'
-          autoFocus={true}
           type='number'
           value={points}
           className='create-task-form__item'
           onChange={(e) => {
-            setError('');
+            clearErrorAndSuccess();
             setPoints(e.target.value);
           }}
         ></input>
@@ -82,7 +89,7 @@ const TaskForm = () => {
           placeholder='Duration...'
           value={duration}
           onChange={(e) => {
-            setError('');
+            clearErrorAndSuccess();
             setDuration(e.target.value);
           }}
         ></input>
@@ -90,9 +97,10 @@ const TaskForm = () => {
           <option value='min'>Minute(s)</option>
           <option value='h'>Hour(s)</option>
         </select>
-        {error && <p>{error}</p>}
+        {error ? <p>{error}</p> : <p></p>}
+        {successMessage ? <p>{successMessage}</p> : <p></p>}
         <div className='create-task-form__buttons'>
-          <button type='submit'>Create</button>
+          <button type='submit'>Add</button>
           <button
             onClick={(e) => {
               e.preventDefault();

@@ -24,8 +24,6 @@ const createData = () => {
     totalPoints: 0,
   };
 
-  console.log(monthData);
-
   return monthData;
 };
 

@@ -51,8 +51,6 @@ const monthReducer = (state = INITAL_STATE, action) => {
       };
 
     case MonthTypes.SET_DATA:
-      console.log('Reducer ----------');
-      console.log(action.payload);
       return {
         ...state,
         ...action.payload,
