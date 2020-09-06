@@ -2,33 +2,41 @@ import { MonthTypes } from './month.types';
 import moment from 'moment';
 
 const currentMonth = moment().format('MMMM');
-const daysInMonth = moment().daysInMonth();
-const dayArray = [];
+
+const createData = () => {
+  const daysInMonth = moment().daysInMonth();
+  const dayArray = [];
+  let i = parseInt(daysInMonth);
+
+  while (i > 0) {
+    const day = {
+      dayNr: i,
+      totalPoints: 0,
+      tasks: [],
+    };
+    dayArray.push(day);
+    i--;
+  }
+  const monthData = {
+    name: currentMonth,
+    amountOfDays: daysInMonth,
+    days: dayArray.reverse(),
+    totalPoints: 0,
+  };
+
+  console.log(monthData);
+
+  return monthData;
+};
 
 export const setData = () => (dispatch) => {
   let data = JSON.parse(localStorage.getItem(currentMonth));
   if (!data) {
-    let i = parseInt(daysInMonth);
+    data = createData();
 
-    while (i > 0) {
-      const day = {
-        dayNr: i,
-        totalPoints: 0,
-        tasks: [],
-      };
-      dayArray.push(day);
-      i--;
-    }
-    const monthData = {
-      name: currentMonth,
-      amountOfDays: daysInMonth,
-      days: dayArray.reverse(),
-      totalPoints: 0,
-    };
-
-    data = monthData;
-
-    localStorage.setItem(currentMonth, JSON.stringify(monthData));
+    localStorage.setItem(currentMonth, JSON.stringify(data));
+    dispatch({ type: MonthTypes.SET_DATA, payload: data });
+  } else {
     dispatch({ type: MonthTypes.SET_DATA, payload: data });
   }
 };
@@ -65,4 +73,11 @@ export const setCompleted = (value, number, id) => (dispatch) => {
     type: MonthTypes.SET_COMPLETED,
     payload: { completed: value, number, id },
   });
+};
+
+export const resetData = () => (dispatch) => {
+  localStorage.removeItem(currentMonth);
+  const data = createData();
+  localStorage.setItem(currentMonth, JSON.stringify(data));
+  dispatch({ type: MonthTypes.SET_DATA, payload: data });
 };

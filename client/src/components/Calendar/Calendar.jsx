@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './calendar.styles.scss';
 import Card from '../Card/Card';
@@ -13,7 +13,7 @@ const Calendar = () => {
 
   useEffect(() => {
     dispatch(setData());
-  });
+  }, []);
 
   return (
     <div className='calendar-container'>
