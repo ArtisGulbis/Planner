@@ -1,11 +1,14 @@
 import { MonthTypes } from './month.types';
 
 const INITAL_STATE = {
-  name: '',
-  amountOfDays: 0,
-  currentDay: 0,
-  days: [],
-  totalPoints: 0,
+  monthData: [],
+  currentMonth: {
+    name: '',
+    amountOfDays: 0,
+    currentDay: 0,
+    days: [],
+    totalPoints: 0,
+  },
 };
 
 const filterDay = (state, action) => {

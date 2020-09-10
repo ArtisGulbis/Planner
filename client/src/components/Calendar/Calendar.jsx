@@ -13,6 +13,7 @@ const Calendar = () => {
 
   useEffect(() => {
     dispatch(setData());
+    // eslint-disable-next-line
   }, []);
 
   return (

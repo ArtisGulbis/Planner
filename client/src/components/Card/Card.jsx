@@ -9,20 +9,28 @@ const Card = ({ monthDayNumber, tasks, totalPoints }) => {
   const currentDay = moment().format('DD');
   const dispatch = useDispatch();
 
+  const checkIfPassedDay = () => {
+    return parseInt(monthDayNumber) < parseInt(currentDay);
+  };
+
   return (
     <div
       className={`card ${
         parseInt(currentDay) === parseInt(monthDayNumber) ? 'current-day' : ''
-      } ${parseInt(monthDayNumber) < parseInt(currentDay) ? 'passed-day' : ''}`}
+      } ${checkIfPassedDay() ? 'passed-day' : ''}`}
     >
       <h3>{monthDayNumber}</h3>
       <p>Points: {totalPoints}</p>
       {tasks.map((task) => (
         <Task key={task.id} task={task} monthDayNumber={monthDayNumber}></Task>
       ))}
-      <button onClick={(e) => dispatch(showFormForTask(monthDayNumber))}>
-        Add
-      </button>
+      {checkIfPassedDay() ? (
+        ''
+      ) : (
+        <button onClick={(e) => dispatch(showFormForTask(monthDayNumber))}>
+          Add
+        </button>
+      )}
     </div>
   );
 };
