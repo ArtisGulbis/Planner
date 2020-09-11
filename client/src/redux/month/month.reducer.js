@@ -3,20 +3,22 @@ import { MonthTypes } from './month.types';
 const INITAL_STATE = {
   monthData: [],
   currentMonth: {
-    name: '',
+    monthName: '',
     amountOfDays: 0,
-    currentDay: 0,
+    // currentDay: 0,
     days: [],
     totalPoints: 0,
   },
 };
 
 const filterDay = (state, action) => {
-  return state.days.filter((day) => day.dayNr === action.payload.number);
+  return state.currentMonth.days.filter(
+    (day) => day.dayNr === action.payload.number
+  );
 };
 
 const getIndex = (state, day) => {
-  return state.days.indexOf(day);
+  return state.currentMonth.days.indexOf(day);
 };
 
 const filterTask = (day, action) => {
@@ -24,7 +26,10 @@ const filterTask = (day, action) => {
 };
 
 const saveToStorage = (state) => {
-  localStorage.setItem(state.name, JSON.stringify(state));
+  localStorage.setItem(
+    state.currentMonth.monthName,
+    JSON.stringify(state.currentMonth)
+  );
 };
 
 const monthReducer = (state = INITAL_STATE, action) => {
@@ -46,17 +51,27 @@ const monthReducer = (state = INITAL_STATE, action) => {
       index = getIndex(state, filteredDay[0]);
       let day = filteredDay[0];
       day.tasks.push(action.payload.task);
-      state.days.splice(index, 1, day);
+      state.currentMonth.days.splice(index, 1, day);
       saveToStorage(state);
       return {
         ...state,
-        days: [...state.days],
+        currentMonth: {
+          ...state.currentMonth,
+          days: [...state.currentMonth.days],
+        },
       };
 
     case MonthTypes.SET_DATA:
+      const { data, currentMonth } = action.payload;
+
+      const filteredMonth = data.filter(
+        (month) => month.monthName === currentMonth
+      );
+
       return {
         ...state,
-        ...action.payload,
+        monthData: [...data],
+        currentMonth: { ...filteredMonth[0] },
       };
 
     case MonthTypes.DELETE_TASK:

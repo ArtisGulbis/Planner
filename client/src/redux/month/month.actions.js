@@ -4,38 +4,53 @@ import moment from 'moment';
 const currentMonth = moment().format('MMMM');
 
 const createData = () => {
-  const daysInMonth = moment().daysInMonth();
-  const dayArray = [];
-  let i = parseInt(daysInMonth);
+  const monthData = [];
 
-  while (i > 0) {
-    const day = {
-      dayNr: i,
+  for (let i = moment().get('month'); i < 12; i++) {
+    const currentYear = moment().format('YYYY');
+    const monthName = moment().month(i).format('MMMM');
+    const month = moment().month(i).format('M');
+    const dateToCheck = `${currentYear}-${month}`;
+    const daysInMonth = moment(dateToCheck, 'YYYY-MM').daysInMonth();
+
+    const dayArray = [];
+    let j = parseInt(daysInMonth);
+    while (j > 0) {
+      const day = {
+        dayNr: j,
+        totalPoints: 0,
+        tasks: [],
+      };
+      dayArray.push(day);
+      j--;
+    }
+    const monthObj = {
+      monthName,
+      amountOfDays: daysInMonth,
+      days: dayArray.reverse(),
       totalPoints: 0,
-      tasks: [],
     };
-    dayArray.push(day);
-    i--;
-  }
-  const monthData = {
-    name: currentMonth,
-    amountOfDays: daysInMonth,
-    days: dayArray.reverse(),
-    totalPoints: 0,
-  };
 
+    localStorage.setItem(monthObj.monthName, JSON.stringify(monthObj));
+
+    monthData.push(monthObj);
+  }
   return monthData;
 };
 
 export const setData = () => (dispatch) => {
-  let data = JSON.parse(localStorage.getItem(currentMonth));
-  if (!data) {
+  const storage = JSON.parse(localStorage.getItem(currentMonth));
+  let data = [];
+  if (!storage) {
+    //create data for the rest of the year
     data = createData();
 
-    localStorage.setItem(currentMonth, JSON.stringify(data));
-    dispatch({ type: MonthTypes.SET_DATA, payload: data });
+    dispatch({ type: MonthTypes.SET_DATA, payload: { data, currentMonth } });
   } else {
-    dispatch({ type: MonthTypes.SET_DATA, payload: data });
+    for (let i = 0; i < localStorage.length; i++) {
+      data.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+    }
+    dispatch({ type: MonthTypes.SET_DATA, payload: { data, currentMonth } });
   }
 };
 

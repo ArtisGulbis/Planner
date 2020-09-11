@@ -7,9 +7,11 @@ import { v4 } from 'uuid';
 
 const Calendar = () => {
   const dispatch = useDispatch();
-  const monthName = useSelector((state) => state.month.name);
-  const totalPoints = useSelector((state) => state.month.totalPoints);
-  const days = useSelector((state) => state.month.days);
+  const monthName = useSelector((state) => state.month.currentMonth.monthName);
+  const totalPoints = useSelector(
+    (state) => state.month.currentMonth.totalPoints
+  );
+  const days = useSelector((state) => state.month.currentMonth.days);
 
   useEffect(() => {
     dispatch(setData());
