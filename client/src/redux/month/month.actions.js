@@ -8,7 +8,6 @@ const createData = (name) => {
   const monthData = [];
   const currentYear = moment().format('YYYY');
   if (name) {
-    console.log('Im here');
     const daysInMonth = moment().month(name).daysInMonth();
     let i = parseInt(daysInMonth);
 
@@ -122,6 +121,9 @@ export const setCompleted = (value, number, id) => (dispatch) => {
 export const resetData = (monthName) => (dispatch) => {
   localStorage.removeItem(monthName);
   const data = createData(monthName);
-  // localStorage.setItem(monthName, JSON.stringify(data));
   dispatch({ type: MonthTypes.RESET_MONTH, payload: data });
+};
+
+export const switchMonth = (name) => (dispatch) => {
+  dispatch({ type: MonthTypes.SWITCH_MONTH, payload: name });
 };

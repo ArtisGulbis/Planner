@@ -17,8 +17,18 @@ const filterDay = (state, action) => {
   );
 };
 
+const filterMonth = (state) => {
+  return state.monthData.filter(
+    (month) => month.monthName === state.currentMonth.monthName
+  );
+};
+
 const getIndefOfDay = (state, day) => {
   return state.currentMonth.days.indexOf(day);
+};
+
+const getIndexOfMonth = (fm, state) => {
+  return state.monthData.indexOf(fm[0]);
 };
 
 const filterTask = (day, action) => {
@@ -37,20 +47,15 @@ const saveToStorage = (state, name, data) => {
   }
 };
 
-const monthReducer = (state = INITAL_STATE, action) => {
-  let filteredDay, index, filteredTask, taskIndex;
-  switch (action.type) {
-    case MonthTypes.SET_CURRENT_MONTH:
-      return {
-        ...state,
-        name: action.payload,
-      };
-    case MonthTypes.SET_DAYS:
-      return {
-        ...state,
-        days: [...action.payload],
-      };
+const replaceMonthData = (state) => {
+  const f = filterMonth(state);
+  const m = getIndexOfMonth(f, state);
+  state.monthData.splice(m, 1, state.currentMonth);
+};
 
+const monthReducer = (state = INITAL_STATE, action) => {
+  let filteredDay, index, filteredTask, taskIndex, filteredMonth, monthIndex;
+  switch (action.type) {
     case MonthTypes.ADD_TASK_TO_DAY:
       filteredDay = filterDay(state, action);
       index = getIndefOfDay(state, filteredDay[0]);
@@ -89,6 +94,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
         ? parseInt(state.currentMonth.totalPoints) -
           parseInt(filteredTask[0].points)
         : state.currentMonth.totalPoints;
+      replaceMonthData(state);
       saveToStorage(state);
       return {
         ...state,
@@ -104,6 +110,9 @@ const monthReducer = (state = INITAL_STATE, action) => {
       state.currentMonth.totalPoints =
         parseInt(state.currentMonth.totalPoints) +
         parseInt(action.payload.amount);
+
+      replaceMonthData(state);
+
       saveToStorage(state);
       return {
         ...state,
@@ -114,6 +123,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
       state.currentMonth.totalPoints =
         parseInt(state.currentMonth.totalPoints) -
         parseInt(action.payload.amount);
+      replaceMonthData(state);
       saveToStorage(state);
       return {
         ...state,
@@ -133,12 +143,14 @@ const monthReducer = (state = INITAL_STATE, action) => {
       };
 
     case MonthTypes.RESET_MONTH:
-      const filteredMonth = state.monthData.filter(
-        (month) => month.monthName === state.currentMonth.monthName
-      );
-      const i = state.monthData.indexOf(filteredMonth[0]);
-      state.monthData.splice(i, 1, filteredMonth[0]);
-      saveToStorage(null, filteredMonth[0].monthName, filteredMonth[0]);
+      //filter month to replace
+      filteredMonth = filterMonth(state);
+      //index of the month to be replaced in state
+      const i = state.monthData.indexOf(filteredMonth);
+      //replace it
+      state.monthData.splice(i, 1, action.payload);
+      //save it to localStorage
+      saveToStorage(null, filteredMonth.monthName, action.payload);
       return {
         ...state,
         monthData: [...state.monthData],
@@ -146,7 +158,20 @@ const monthReducer = (state = INITAL_STATE, action) => {
           ...action.payload,
         },
       };
+    case MonthTypes.SWITCH_MONTH:
+      //nm -> nextMonth
+      const nm = state.monthData.filter(
+        (month) => month.monthName === action.payload
+      );
 
+      const nextMonth = nm[0];
+
+      return {
+        ...state,
+        currentMonth: {
+          ...nextMonth,
+        },
+      };
     default:
       return state;
   }
