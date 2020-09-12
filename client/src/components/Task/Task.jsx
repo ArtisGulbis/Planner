@@ -17,9 +17,9 @@ const Task = ({ task, monthDayNumber }) => {
     !task.completed && dispatch(removePoints(task.points, monthDayNumber));
   };
   return (
-    <div className="task-container" data-id={task.id}>
+    <div className='task-container' data-id={task.id}>
       <input
-        type="checkbox"
+        type='checkbox'
         checked={task.completed}
         onChange={(e) => handleChande(e)}
       ></input>

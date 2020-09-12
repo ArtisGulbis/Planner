@@ -12,7 +12,6 @@ const Calendar = () => {
     (state) => state.month.currentMonth.totalPoints
   );
   const days = useSelector((state) => state.month.currentMonth.days);
-
   useEffect(() => {
     dispatch(setData());
     // eslint-disable-next-line
