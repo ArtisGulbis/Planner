@@ -1,12 +1,10 @@
 import { MonthTypes } from './month.types';
 import moment from 'moment';
-
 const currentMonth = moment().format('MMMM');
-
+const currentYear = moment().format('YYYY');
 const createData = (name) => {
   let dayArray = [];
   const monthData = [];
-  const currentYear = moment().format('YYYY');
   if (name) {
     const daysInMonth = moment().month(name).daysInMonth();
     let i = parseInt(daysInMonth);
@@ -31,6 +29,7 @@ const createData = (name) => {
   for (let i = moment().get('month'); i < 12; i++) {
     dayArray = [];
     const monthName = moment().month(i).format('MMMM');
+
     const month = moment().month(i).format('M');
     const dateToCheck = `${currentYear}-${month}`;
     const daysInMonth = moment(dateToCheck, 'YYYY-MM').daysInMonth();
@@ -66,7 +65,7 @@ export const setData = () => (dispatch) => {
   if (!storage) {
     //create data for the rest of the year
     data = createData();
-
+    console.log(data);
     currentMonthObj = data.filter((month) => month.monthName === currentMonth);
     dispatch({
       type: MonthTypes.SET_DATA,
@@ -121,6 +120,7 @@ export const setCompleted = (value, number, id) => (dispatch) => {
 export const resetData = (monthName) => (dispatch) => {
   localStorage.removeItem(monthName);
   const data = createData(monthName);
+  // localStorage.setItem(monthName, JSON.stringify(data));
   dispatch({ type: MonthTypes.RESET_MONTH, payload: data });
 };
 

@@ -1,4 +1,5 @@
 import { MonthTypes } from './month.types';
+import moment from 'moment';
 
 const INITAL_STATE = {
   monthData: [],
@@ -9,6 +10,16 @@ const INITAL_STATE = {
     days: [],
     totalPoints: 0,
   },
+};
+
+const sortMonths = (data) => {
+  const months = [];
+  for (let i = 0; i < 12; i++) {
+    months.push(moment().month(i).format('MMMM'));
+  }
+  data.sort((a, b) => {
+    return months.indexOf(a.monthName) - months.indexOf(b.monthName);
+  });
 };
 
 const filterDay = (state, action) => {
@@ -35,16 +46,15 @@ const filterTask = (day, action) => {
   return day.tasks.filter((task) => task.id === action.payload.id);
 };
 
-const saveToStorage = (state, name, data) => {
-  if (name && data) {
-    localStorage.setItem(name, JSON.stringify(data));
-    return;
-  } else {
-    localStorage.setItem(
-      state.currentMonth.monthName,
-      JSON.stringify(state.currentMonth)
-    );
+const saveToStorage = (state, otherData) => {
+  if (otherData) {
+    return localStorage.setItem(otherData.monthName, JSON.stringify(otherData));
   }
+
+  localStorage.setItem(
+    state.currentMonth.monthName,
+    JSON.stringify(state.currentMonth)
+  );
 };
 
 const replaceMonthData = (state) => {
@@ -54,7 +64,7 @@ const replaceMonthData = (state) => {
 };
 
 const monthReducer = (state = INITAL_STATE, action) => {
-  let filteredDay, index, filteredTask, taskIndex, filteredMonth, monthIndex;
+  let filteredDay, index, filteredTask, taskIndex, filteredMonth;
   switch (action.type) {
     case MonthTypes.ADD_TASK_TO_DAY:
       filteredDay = filterDay(state, action);
@@ -73,7 +83,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
 
     case MonthTypes.SET_DATA:
       const { data, currentMonth } = action.payload;
-
+      sortMonths(data);
       return {
         ...state,
         monthData: [...data],
@@ -146,11 +156,13 @@ const monthReducer = (state = INITAL_STATE, action) => {
       //filter month to replace
       filteredMonth = filterMonth(state);
       //index of the month to be replaced in state
-      const i = state.monthData.indexOf(filteredMonth);
+      const i = state.monthData.findIndex(
+        (month) => month.monthName === filteredMonth[0].monthName
+      );
       //replace it
       state.monthData.splice(i, 1, action.payload);
       //save it to localStorage
-      saveToStorage(null, filteredMonth.monthName, action.payload);
+      saveToStorage(state, action.payload);
       return {
         ...state,
         monthData: [...state.monthData],
