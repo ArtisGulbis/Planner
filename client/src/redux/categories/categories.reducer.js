@@ -117,18 +117,18 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.REMOVE_TIME_FROM_CATEGORY:
-      ({ category, hour, minute } = action.payload);
-
-      [filteredCategory] = filterCategory(state, category);
-
+      ({ category, hour, minute, monthName } = action.payload);
+      [filteredMonth] = filterMonth(state, monthName);
+      [filteredCategory] = filterCategory(filteredMonth, category);
       newTime = formatTime(filteredCategory.time, { hour, minute });
-
-      newData = updateData(state, newTime, category);
-
-      saveToStorage(newData);
+      newData = updateData(filteredMonth, newTime, category);
+      filteredMonth.categories = [...newData];
+      saveToStorage(filteredMonth);
       return {
         ...state,
-        cat: [...newData],
+        cat: state.cat.map((el) =>
+          el.month === filteredMonth.month ? filteredMonth : el
+        ),
       };
     default:
       return state;

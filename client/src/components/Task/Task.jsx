@@ -31,6 +31,7 @@ const Task = ({ task, monthDayNumber }) => {
       dispatch(removePoints(task.points, monthDayNumber));
       dispatch(
         removeTimeFromCategory({
+          monthName,
           category: task.category,
           hour: task.timeType === 'h' ? parseInt(task.duration) : 0,
           minute: task.timeType === 'min' ? parseInt(task.duration) : 0,

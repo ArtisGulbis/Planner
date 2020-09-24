@@ -1,4 +1,5 @@
 import { CategoriesTypes, createDefaultData } from './categories.types';
+import moment from 'moment';
 
 export const addTimeToCategory = (data) => (dispatch) => {
   dispatch({
@@ -13,8 +14,17 @@ export const removeTimeFromCategory = (data) => (dispatch) => {
 
 export const loadCategoryData = () => (dispatch) => {
   const name = 'categories';
-  const data = JSON.parse(localStorage.getItem(name));
-  if (!data) {
+  const monthNames = [];
+
+  for (let i = moment().get('month'); i < 12; i++) {
+    monthNames.push(moment().month(i).format('MMMM'));
+  }
+
+  const data = monthNames.map((el) =>
+    JSON.parse(localStorage.getItem(`${name}-${el}`))
+  );
+
+  if (data.includes(null)) {
     const d = createDefaultData();
     for (let i = 0; i < d.length; i++) {
       localStorage.setItem(`${name}-${d[i].month}`, JSON.stringify(d[i]));
