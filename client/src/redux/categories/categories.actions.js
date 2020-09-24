@@ -24,3 +24,13 @@ export const loadCategoryData = () => (dispatch) => {
     dispatch({ type: CategoriesTypes.LOAD_CATEGORY_DATA, payload: data });
   }
 };
+
+export const addNewCategory = (categoryName) => (dispatch) => {
+  const newCategory = { name: categoryName, time: { hour: 0, minute: 0 } };
+
+  dispatch({ type: CategoriesTypes.ADD_NEW_CATEGORY, payload: newCategory });
+};
+
+export const removeCategory = (category) => (dispatch) => {
+  dispatch({ type: CategoriesTypes.REMOVE_CATEGORY, payload: { category } });
+};

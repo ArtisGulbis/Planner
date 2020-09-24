@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addTask } from '../../redux/month/month.actions';
 import { v4 } from 'uuid';
 import { showFormForTask } from '../../redux/form/form.actions';
-import { addTimeToCategory } from '../../redux/categories/categories.actions';
 import './taskform.styles.scss';
 
 const TaskForm = () => {
@@ -16,6 +15,7 @@ const TaskForm = () => {
   const [timeType, setTimeType] = useState('min');
   const [category, setCategory] = useState('Gaming');
   const [successMessage, setSuccessMessage] = useState('');
+  const categories = useSelector((state) => state.categories.cat);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -101,10 +101,11 @@ const TaskForm = () => {
           <option value='h'>Hour(s)</option>
         </select>
         <select onChange={(e) => setCategory(e.target.value)}>
-          <option value='Gaming'>Gaming</option>
-          <option value='Fitness'>Fitness</option>
-          <option value='Studying'>Studiying</option>
-          <option value='Guitar'>Guitar</option>
+          {categories.map((el, i) => (
+            <option key={i} value={el.name}>
+              {el.name}
+            </option>
+          ))}
         </select>
         {error ? <p>{error}</p> : <p></p>}
         {successMessage ? <p>{successMessage}</p> : <p></p>}
@@ -125,3 +126,8 @@ const TaskForm = () => {
 };
 
 export default TaskForm;
+
+// <option value='Gaming'>Gaming</option>
+//           <option value='Fitness'>Fitness</option>
+//           <option value='Studying'>Studiying</option>
+//           <option value='Guitar'>Guitar</option>

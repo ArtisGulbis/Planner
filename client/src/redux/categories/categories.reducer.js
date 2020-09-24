@@ -4,6 +4,8 @@ const INITIAL_STATE = {
   cat: [],
 };
 
+const storageName = 'categories';
+
 const formatTime = (currentTime, timeToAdd, type) => {
   const hourMark = 59;
   const finalTime = { hour: 0, minute: 0 };
@@ -41,7 +43,7 @@ const formatTime = (currentTime, timeToAdd, type) => {
 };
 
 const saveToStorage = (data) => {
-  localStorage.setItem('categories', JSON.stringify(data));
+  localStorage.setItem(storageName, JSON.stringify(data));
 };
 
 const updateData = (state, data, category) => {
@@ -57,7 +59,7 @@ const filterCategory = (state, category) => {
 };
 
 const categoriesReducer = (state = INITIAL_STATE, action) => {
-  let category, hour, minute, currentTime, newTime, newData;
+  let storageData, category, hour, minute, filteredCategory, newTime, newData;
   switch (action.type) {
     case CategoriesTypes.LOAD_CATEGORY_DATA:
       return {
@@ -66,14 +68,33 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.ADD_NEW_CATEGORY:
-      return state;
+      storageData = JSON.parse(localStorage.getItem(storageName));
+      storageData.push(action.payload);
+
+      saveToStorage(storageData);
+      return {
+        ...state,
+        cat: [...state.cat, action.payload],
+      };
+
+    case CategoriesTypes.REMOVE_CATEGORY:
+      ({ category } = action.payload);
+      [filteredCategory] = filterCategory(state, category);
+      storageData = JSON.parse(localStorage.getItem(storageName));
+      const i = storageData.findIndex((el) => el.name === category);
+      storageData.splice(i, 1);
+      saveToStorage(storageData);
+      return {
+        ...state,
+        cat: [...storageData],
+      };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:
       ({ category, hour, minute } = action.payload);
 
-      [currentTime] = filterCategory(state, category);
+      [filteredCategory] = filterCategory(state, category);
 
-      newTime = formatTime(currentTime.time, { hour, minute }, 'add');
+      newTime = formatTime(filteredCategory.time, { hour, minute }, 'add');
 
       newData = updateData(state, newTime, category);
 
@@ -86,9 +107,9 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
     case CategoriesTypes.REMOVE_TIME_FROM_CATEGORY:
       ({ category, hour, minute } = action.payload);
 
-      [currentTime] = filterCategory(state, category);
+      [filteredCategory] = filterCategory(state, category);
 
-      newTime = formatTime(currentTime.time, { hour, minute });
+      newTime = formatTime(filteredCategory.time, { hour, minute });
 
       newData = updateData(state, newTime, category);
 
