@@ -43,23 +43,35 @@ const formatTime = (currentTime, timeToAdd, type) => {
 };
 
 const saveToStorage = (data) => {
-  localStorage.setItem(storageName, JSON.stringify(data));
+  localStorage.setItem(`${storageName}-${data.month}`, JSON.stringify(data));
 };
 
-const updateData = (state, data, category) => {
-  return state.cat.map((el) =>
+const updateData = (month, data, category) => {
+  return month.categories.map((el) =>
     el.name === category
       ? { ...el, time: { hour: data.hour, minute: data.minute } }
       : el
   );
 };
 
-const filterCategory = (state, category) => {
-  return state.cat.filter((el) => el.name === category);
+const filterCategory = (month, category) => {
+  return month.categories.filter((el) => el.name === category);
+};
+
+const filterMonth = (state, month) => {
+  return state.cat.filter((el) => el.month === month);
 };
 
 const categoriesReducer = (state = INITIAL_STATE, action) => {
-  let storageData, category, hour, minute, filteredCategory, newTime, newData;
+  let storageData,
+    category,
+    hour,
+    minute,
+    filteredCategory,
+    newTime,
+    newData,
+    monthName,
+    filteredMonth;
   switch (action.type) {
     case CategoriesTypes.LOAD_CATEGORY_DATA:
       return {
@@ -90,18 +102,18 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:
-      ({ category, hour, minute } = action.payload);
-
-      [filteredCategory] = filterCategory(state, category);
-
+      ({ category, hour, minute, monthName } = action.payload);
+      [filteredMonth] = filterMonth(state, monthName);
+      [filteredCategory] = filterCategory(filteredMonth, category);
       newTime = formatTime(filteredCategory.time, { hour, minute }, 'add');
-
-      newData = updateData(state, newTime, category);
-
-      saveToStorage(newData);
+      newData = updateData(filteredMonth, newTime, category);
+      filteredMonth.categories = [...newData];
+      saveToStorage(filteredMonth);
       return {
         ...state,
-        cat: [...newData],
+        cat: state.cat.map((el) =>
+          el.month === filteredMonth.month ? filteredMonth : el
+        ),
       };
 
     case CategoriesTypes.REMOVE_TIME_FROM_CATEGORY:

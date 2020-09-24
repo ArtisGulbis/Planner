@@ -1,4 +1,4 @@
-import { CategoriesTypes, defaultCategoryData } from './categories.types';
+import { CategoriesTypes, createDefaultData } from './categories.types';
 
 export const addTimeToCategory = (data) => (dispatch) => {
   dispatch({
@@ -15,10 +15,13 @@ export const loadCategoryData = () => (dispatch) => {
   const name = 'categories';
   const data = JSON.parse(localStorage.getItem(name));
   if (!data) {
-    localStorage.setItem(name, JSON.stringify(defaultCategoryData));
+    const d = createDefaultData();
+    for (let i = 0; i < d.length; i++) {
+      localStorage.setItem(`${name}-${d[i].month}`, JSON.stringify(d[i]));
+    }
     dispatch({
       type: CategoriesTypes.LOAD_CATEGORY_DATA,
-      payload: defaultCategoryData,
+      payload: d,
     });
   } else {
     dispatch({ type: CategoriesTypes.LOAD_CATEGORY_DATA, payload: data });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteTask,
   addPoints,
@@ -14,13 +14,14 @@ import './task.styles.scss';
 
 const Task = ({ task, monthDayNumber }) => {
   const dispatch = useDispatch();
-
+  const { monthName } = useSelector((state) => state.month.currentMonth);
   const handleChange = (e) => {
     dispatch(setCompleted(!task.completed, monthDayNumber, task.id));
     if (task.completed) {
       dispatch(addPoints(task.points, monthDayNumber));
       dispatch(
         addTimeToCategory({
+          monthName,
           category: task.category,
           hour: task.timeType === 'h' ? parseInt(task.duration) : 0,
           minute: task.timeType === 'min' ? parseInt(task.duration) : 0,

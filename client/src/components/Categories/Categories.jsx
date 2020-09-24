@@ -7,6 +7,7 @@ import {
 
 const Categories = () => {
   const dispatch = useDispatch();
+  const { monthName } = useSelector((state) => state.month.currentMonth);
   const categories = useSelector((state) => state.categories.cat);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [error, setError] = useState('');
@@ -39,16 +40,26 @@ const Categories = () => {
         ></input>
         <button type='submit'>Create new category</button>
       </form>
-      {categories.map((category, i) => {
-        return (
-          <div key={i}>
-            <h2>{category.name}</h2>
-            <h3>{`${category.time.hour} h ${category.time.minute} min`}</h3>
-            <button onClick={(e) => handleClick(category)}>X</button>
-          </div>
-        );
-      })}
       <p>{error}</p>
+      {categories.map((c, i) =>
+        c.month === monthName ? (
+          <div key={i}>
+            <div>
+              {c.categories.map((el, i) => {
+                return (
+                  <div key={i}>
+                    <p>{el.name}</p>
+                    <p>{`${el.time.hour} h ${el.time.minute} min`}</p>
+                    <button onClick={(e) => handleClick(el)}>X</button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          ''
+        )
+      )}
     </div>
   );
 };

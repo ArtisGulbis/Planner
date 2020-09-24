@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const CategoriesTypes = {
   ADD_NEW_CATEGORY: 'ADD_NEW_CATEGORY',
   REMOVE_CATEGORY: 'REMOVE_CATEGORY',
@@ -6,33 +8,22 @@ export const CategoriesTypes = {
   LOAD_CATEGORY_DATA: 'LOAD_CATEGORY_DATA',
 };
 
-export const defaultCategoryData = [
-  {
-    name: 'Guitar',
-    time: {
-      hour: 0,
-      minute: 0,
-    },
-  },
-  {
-    name: 'Fitness',
-    time: {
-      hour: 0,
-      minute: 0,
-    },
-  },
-  {
-    name: 'Gaming',
-    time: {
-      hour: 0,
-      minute: 0,
-    },
-  },
-  {
-    name: 'Studying',
-    time: {
-      hour: 0,
-      minute: 0,
-    },
-  },
-];
+const defaultCategories = ['Guitar', 'Fitness', 'Studying', 'Gaming'];
+
+export const createDefaultData = () => {
+  const defaultCategoryData = [];
+  const months = 12;
+  for (let i = moment().get('month'); i < months; i++) {
+    const monthName = moment().month(i).format('MMMM');
+    const a = {
+      month: monthName,
+      categories: defaultCategories.map((el) => ({
+        name: el,
+        time: { hour: 0, minute: 0 },
+      })),
+    };
+
+    defaultCategoryData.push(a);
+  }
+  return defaultCategoryData;
+};

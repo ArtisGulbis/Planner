@@ -8,14 +8,15 @@ import './taskform.styles.scss';
 const TaskForm = () => {
   const dispatch = useDispatch();
   const { currentCard } = useSelector((state) => state.form);
+  const categories = useSelector((state) => state.categories.cat);
+  const { monthName } = useSelector((state) => state.month.currentMonth);
   const [taskInput, setTaskInput] = useState('');
   const [points, setPoints] = useState('');
   const [error, setError] = useState('');
   const [duration, setDuration] = useState('');
   const [timeType, setTimeType] = useState('min');
-  const [category, setCategory] = useState('Gaming');
+  const [category, setCategory] = useState('Guitar');
   const [successMessage, setSuccessMessage] = useState('');
-  const categories = useSelector((state) => state.categories.cat);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,7 +42,7 @@ const TaskForm = () => {
       points: points < 0 ? points * -1 : points,
       id: v4(),
     };
-
+    console.log(task);
     //Clear Inputs
     setTaskInput('');
     setPoints('');
@@ -100,12 +101,21 @@ const TaskForm = () => {
           <option value='min'>Minute(s)</option>
           <option value='h'>Hour(s)</option>
         </select>
-        <select onChange={(e) => setCategory(e.target.value)}>
-          {categories.map((el, i) => (
-            <option key={i} value={el.name}>
-              {el.name}
-            </option>
-          ))}
+        <select
+          onChange={(e) => {
+            console.log(e.target.value);
+            setCategory(e.target.value);
+          }}
+        >
+          {categories.map((el) =>
+            el.month === monthName
+              ? el.categories.map((el, i) => (
+                  <option key={i} value={el.name}>
+                    {el.name}
+                  </option>
+                ))
+              : ''
+          )}
         </select>
         {error ? <p>{error}</p> : <p></p>}
         {successMessage ? <p>{successMessage}</p> : <p></p>}
