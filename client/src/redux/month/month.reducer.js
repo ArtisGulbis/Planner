@@ -6,7 +6,6 @@ const INITAL_STATE = {
   currentMonth: {
     monthName: '',
     amountOfDays: 0,
-    // currentDay: 0,
     days: [],
     totalPoints: 0,
   },

@@ -65,7 +65,6 @@ export const setData = () => (dispatch) => {
   if (!storage) {
     //create data for the rest of the year
     data = createData();
-    console.log(data);
     currentMonthObj = data.filter((month) => month.monthName === currentMonth);
     dispatch({
       type: MonthTypes.SET_DATA,

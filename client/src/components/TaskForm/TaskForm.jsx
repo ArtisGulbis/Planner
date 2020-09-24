@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addTask } from '../../redux/month/month.actions';
 import { v4 } from 'uuid';
 import { showFormForTask } from '../../redux/form/form.actions';
+import { addTimeToCategory } from '../../redux/categories/categories.actions';
 import './taskform.styles.scss';
 
 const TaskForm = () => {
@@ -13,6 +14,7 @@ const TaskForm = () => {
   const [error, setError] = useState('');
   const [duration, setDuration] = useState('');
   const [timeType, setTimeType] = useState('min');
+  const [category, setCategory] = useState('Gaming');
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = (e) => {
@@ -35,6 +37,7 @@ const TaskForm = () => {
       completed: false,
       duration,
       timeType,
+      category,
       points: points < 0 ? points * -1 : points,
       id: v4(),
     };
@@ -96,6 +99,12 @@ const TaskForm = () => {
         <select onChange={(e) => setTimeType(e.target.value)}>
           <option value='min'>Minute(s)</option>
           <option value='h'>Hour(s)</option>
+        </select>
+        <select onChange={(e) => setCategory(e.target.value)}>
+          <option value='Gaming'>Gaming</option>
+          <option value='Fitness'>Fitness</option>
+          <option value='Studying'>Studiying</option>
+          <option value='Guitar'>Guitar</option>
         </select>
         {error ? <p>{error}</p> : <p></p>}
         {successMessage ? <p>{successMessage}</p> : <p></p>}
