@@ -46,7 +46,7 @@ const saveToStorage = (data) => {
   localStorage.setItem(`${storageName}-${data.month}`, JSON.stringify(data));
 };
 
-const updateData = (month, data, category) => {
+const updateTime = (month, data, category) => {
   return month.categories.map((el) =>
     el.name === category
       ? { ...el, time: { hour: data.hour, minute: data.minute } }
@@ -83,12 +83,8 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       [filteredMonth] = filterMonth(state, action.payload.month);
       filteredMonth.categories.push(action.payload.category);
       saveToStorage(filteredMonth);
-      storageData = JSON.parse(
-        localStorage.getItem(`${storageName}-${filteredMonth.month}`)
-      );
       return {
         ...state,
-        cat: [...storageData.categories],
       };
 
     case CategoriesTypes.REMOVE_CATEGORY:
@@ -108,7 +104,7 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       [filteredMonth] = filterMonth(state, monthName);
       [filteredCategory] = filterCategory(filteredMonth, category);
       newTime = formatTime(filteredCategory.time, { hour, minute }, 'add');
-      newData = updateData(filteredMonth, newTime, category);
+      newData = updateTime(filteredMonth, newTime, category);
       filteredMonth.categories = [...newData];
       saveToStorage(filteredMonth);
       return {
@@ -123,7 +119,7 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       [filteredMonth] = filterMonth(state, monthName);
       [filteredCategory] = filterCategory(filteredMonth, category);
       newTime = formatTime(filteredCategory.time, { hour, minute });
-      newData = updateData(filteredMonth, newTime, category);
+      newData = updateTime(filteredMonth, newTime, category);
       filteredMonth.categories = [...newData];
       saveToStorage(filteredMonth);
       return {
@@ -131,6 +127,13 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
         cat: state.cat.map((el) =>
           el.month === filteredMonth.month ? filteredMonth : el
         ),
+      };
+
+    case CategoriesTypes.RESET_CATEGORY_DATA:
+      saveToStorage(action.payload);
+      return {
+        ...state,
+        cat: [...state.cat],
       };
     default:
       return state;

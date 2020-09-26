@@ -19,3 +19,13 @@ export const createDefaultData = () => {
   }
   return defaultCategoryData;
 };
+
+export const createNewDataFormMonth = (monthName) => {
+  return {
+    month: monthName,
+    categories: defaultCategories.map((el) => ({
+      name: el,
+      time: { hour: 0, minute: 0 },
+    })),
+  };
+};

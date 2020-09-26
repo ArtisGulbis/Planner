@@ -11,7 +11,6 @@ const Categories = () => {
   const categories = useSelector((state) => state.categories.cat);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [error, setError] = useState('');
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(addNewCategory({ newCategoryName, monthName }));

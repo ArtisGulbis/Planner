@@ -1,5 +1,5 @@
 import { CategoriesTypes } from './categories.types';
-import { createDefaultData } from './categories.utils';
+import { createDefaultData, createNewDataFormMonth } from './categories.utils';
 import moment from 'moment';
 
 export const addTimeToCategory = (data) => (dispatch) => {
@@ -52,4 +52,9 @@ export const addNewCategory = ({ newCategoryName, monthName }) => (
 
 export const removeCategory = (category) => (dispatch) => {
   dispatch({ type: CategoriesTypes.REMOVE_CATEGORY, payload: { category } });
+};
+
+export const resetCategoryData = (monthName) => (dispatch) => {
+  const data = createNewDataFormMonth(monthName);
+  dispatch({ type: CategoriesTypes.RESET_CATEGORY_DATA, payload: data });
 };
