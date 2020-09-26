@@ -1,4 +1,5 @@
-import { CategoriesTypes, createDefaultData } from './categories.types';
+import { CategoriesTypes } from './categories.types';
+import { createDefaultData } from './categories.utils';
 import moment from 'moment';
 
 export const addTimeToCategory = (data) => (dispatch) => {
@@ -38,8 +39,13 @@ export const loadCategoryData = () => (dispatch) => {
   }
 };
 
-export const addNewCategory = (categoryName) => (dispatch) => {
-  const newCategory = { name: categoryName, time: { hour: 0, minute: 0 } };
+export const addNewCategory = ({ newCategoryName, monthName }) => (
+  dispatch
+) => {
+  const newCategory = {
+    month: monthName,
+    category: { name: newCategoryName, time: { hour: 0, minute: 0 } },
+  };
 
   dispatch({ type: CategoriesTypes.ADD_NEW_CATEGORY, payload: newCategory });
 };

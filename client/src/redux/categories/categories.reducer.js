@@ -80,13 +80,15 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.ADD_NEW_CATEGORY:
-      storageData = JSON.parse(localStorage.getItem(storageName));
-      storageData.push(action.payload);
-
-      saveToStorage(storageData);
+      [filteredMonth] = filterMonth(state, action.payload.month);
+      filteredMonth.categories.push(action.payload.category);
+      saveToStorage(filteredMonth);
+      storageData = JSON.parse(
+        localStorage.getItem(`${storageName}-${filteredMonth.month}`)
+      );
       return {
         ...state,
-        cat: [...state.cat, action.payload],
+        cat: [...storageData.categories],
       };
 
     case CategoriesTypes.REMOVE_CATEGORY:

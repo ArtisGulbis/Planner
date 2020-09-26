@@ -14,7 +14,7 @@ const Categories = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addNewCategory(newCategoryName));
+    dispatch(addNewCategory({ newCategoryName, monthName }));
     setNewCategoryName('');
   };
 
