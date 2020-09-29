@@ -133,7 +133,6 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       saveToStorage(action.payload);
       return {
         ...state,
-        cat: [...state.cat],
       };
     default:
       return state;
