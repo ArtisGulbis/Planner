@@ -51,7 +51,7 @@ export const addNewCategory = ({ newCategoryName, monthName }) => (
 };
 
 export const removeCategory = (category) => (dispatch) => {
-  dispatch({ type: CategoriesTypes.REMOVE_CATEGORY, payload: { category } });
+  dispatch({ type: CategoriesTypes.REMOVE_CATEGORY, payload: category });
 };
 
 export const resetCategoryData = (monthName) => (dispatch) => {

@@ -55,6 +55,7 @@ const updateTime = (month, data, category) => {
 };
 
 const filterCategory = (month, category) => {
+  console.log(month, category);
   return month.categories.filter((el) => el.name === category);
 };
 
@@ -88,15 +89,20 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.REMOVE_CATEGORY:
-      ({ category } = action.payload);
-      [filteredCategory] = filterCategory(state, category);
-      storageData = JSON.parse(localStorage.getItem(storageName));
-      const i = storageData.findIndex((el) => el.name === category);
-      storageData.splice(i, 1);
-      saveToStorage(storageData);
+      category = action.payload;
+      // console.log(category);
+      // console.log(category);
+      [filteredMonth] = filterMonth(state, category.month);
+      console.log(filteredMonth);
+      [filteredCategory] = filterCategory(filteredMonth, category.month);
+      // console.log(filteredCategory);
+      // storageData = JSON.parse(localStorage.getItem(storageName));
+      // const i = storageData.findIndex((el) => el.name === category);
+      // storageData.splice(i, 1);
+      // saveToStorage(storageData);
       return {
         ...state,
-        cat: [...storageData],
+        // cat: [...storageData],
       };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:

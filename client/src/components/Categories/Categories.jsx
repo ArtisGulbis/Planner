@@ -17,12 +17,11 @@ const Categories = () => {
     setNewCategoryName('');
   };
 
-  const handleClick = (category) => {
+  const handleClick = (month, category) => {
     if ((category.time.hour || category.time.minute) > 0) {
       return setError('Clear time first');
     }
-
-    dispatch(removeCategory(category.name));
+    dispatch(removeCategory(month));
   };
 
   return (
@@ -49,7 +48,7 @@ const Categories = () => {
                   <div key={i}>
                     <p>{el.name}</p>
                     <p>{`${el.time.hour} h ${el.time.minute} min`}</p>
-                    <button onClick={(e) => handleClick(el)}>X</button>
+                    <button onClick={(e) => handleClick(c, el)}>X</button>
                   </div>
                 );
               })}
