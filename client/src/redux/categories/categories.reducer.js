@@ -55,7 +55,6 @@ const updateTime = (month, data, category) => {
 };
 
 const filterCategory = (month, category) => {
-  console.log(month, category);
   return month.categories.filter((el) => el.name === category);
 };
 
@@ -65,6 +64,8 @@ const filterMonth = (state, month) => {
 
 const categoriesReducer = (state = INITIAL_STATE, action) => {
   let storageData,
+    categories,
+    month,
     category,
     hour,
     minute,
@@ -89,20 +90,17 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.REMOVE_CATEGORY:
-      category = action.payload;
-      // console.log(category);
-      // console.log(category);
-      [filteredMonth] = filterMonth(state, category.month);
-      console.log(filteredMonth);
-      [filteredCategory] = filterCategory(filteredMonth, category.month);
-      // console.log(filteredCategory);
-      // storageData = JSON.parse(localStorage.getItem(storageName));
-      // const i = storageData.findIndex((el) => el.name === category);
-      // storageData.splice(i, 1);
-      // saveToStorage(storageData);
+      ({ categories, category, month } = action.payload);
+      console.log(categories);
+      [filteredMonth] = filterMonth(state, month);
+      [filteredCategory] = filterCategory(filteredMonth, category);
+      storageData = JSON.parse(localStorage.getItem(`${storageName}-${month}`));
+      const i = storageData.categories.findIndex((el) => el.name === category);
+      storageData.categories.splice(i, 1);
+      saveToStorage(storageData);
       return {
         ...state,
-        // cat: [...storageData],
+        cat: [storageData],
       };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:
@@ -140,6 +138,18 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
       };
+
+    case CategoriesTypes.SWITCH_CATEGORIES:
+      //nextCategory
+      storageData = JSON.parse(
+        localStorage.getItem(`${storageName}-${action.payload}`)
+      );
+
+      return {
+        ...state,
+        cat: [storageData],
+      };
+
     default:
       return state;
   }

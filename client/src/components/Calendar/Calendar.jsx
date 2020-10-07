@@ -12,6 +12,7 @@ import moment from 'moment';
 
 const Calendar = () => {
   const currentDay = moment().format('DD');
+  const currMonth = moment().format('MMMM');
   const dispatch = useDispatch();
   // const [hideCards, setHideCards] = useState(false);
   const monthName = useSelector((state) => state.month.currentMonth.monthName);
@@ -47,7 +48,9 @@ const Calendar = () => {
               tasks={day.tasks}
               totalPoints={day.totalPoints}
             ></Card>
-          ) : hideCards && parseInt(day.dayNr) < parseInt(currentDay) ? (
+          ) : hideCards &&
+            parseInt(day.dayNr) < parseInt(currentDay) &&
+            monthName === currMonth ? (
             ''
           ) : (
             <Card

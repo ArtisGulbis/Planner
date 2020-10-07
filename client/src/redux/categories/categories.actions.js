@@ -50,11 +50,18 @@ export const addNewCategory = ({ newCategoryName, monthName }) => (
   dispatch({ type: CategoriesTypes.ADD_NEW_CATEGORY, payload: newCategory });
 };
 
-export const removeCategory = (category) => (dispatch) => {
-  dispatch({ type: CategoriesTypes.REMOVE_CATEGORY, payload: category });
+export const removeCategory = (data, category) => (dispatch) => {
+  dispatch({
+    type: CategoriesTypes.REMOVE_CATEGORY,
+    payload: { ...data, category },
+  });
 };
 
 export const resetCategoryData = (monthName) => (dispatch) => {
   const data = createNewDataFormMonth(monthName);
   dispatch({ type: CategoriesTypes.RESET_CATEGORY_DATA, payload: data });
+};
+
+export const switchCategories = (name) => (dispatch) => {
+  dispatch({ type: CategoriesTypes.SWITCH_CATEGORIES, payload: name });
 };

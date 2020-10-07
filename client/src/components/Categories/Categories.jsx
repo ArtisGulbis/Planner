@@ -21,7 +21,7 @@ const Categories = () => {
     if ((category.time.hour || category.time.minute) > 0) {
       return setError('Clear time first');
     }
-    dispatch(removeCategory(month));
+    dispatch(removeCategory(month, category.name));
   };
 
   return (

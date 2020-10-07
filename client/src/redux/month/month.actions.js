@@ -119,7 +119,6 @@ export const setCompleted = (value, number, id) => (dispatch) => {
 export const resetData = (monthName) => (dispatch) => {
   localStorage.removeItem(monthName);
   const data = createData(monthName);
-  // localStorage.setItem(monthName, JSON.stringify(data));
   dispatch({ type: MonthTypes.RESET_MONTH, payload: data });
 };
 
