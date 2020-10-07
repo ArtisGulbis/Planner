@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useSelector, useDispatch } from 'react-redux';
 import Calendar from './components/Calendar/Calendar';
 import TaskForm from './components/TaskForm/TaskForm';
@@ -11,7 +10,6 @@ import {
 import './App.scss';
 import Sidebar from './components/Sidebar/Sidebar';
 import Categories from './components/Categories/Categories';
-import Button from 'react-bootstrap/Button';
 
 const App = () => {
   const dispatch = useDispatch();
