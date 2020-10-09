@@ -42,7 +42,6 @@ const TaskForm = () => {
       points: points < 0 ? points * -1 : points,
       id: v4(),
     };
-    //Clear Inputs
     setTaskInput('');
     setPoints('');
     setDuration('');
