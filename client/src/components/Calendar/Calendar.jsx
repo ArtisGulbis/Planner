@@ -24,17 +24,17 @@ const Calendar = () => {
   }, []);
 
   return (
-    <div className='calendar-container'>
-      <h1 className='month-name'>{monthName}</h1>
-      <label className='switch'>
+    <div className="calendar-container">
+      <h1 className="month-name">{monthName}</h1>
+      <label className="switch">
         <input
-          type='checkbox'
+          type="checkbox"
           checked={hideCards || false}
           onChange={(e) => dispatch(changeShowCards(!hideCards))}
         ></input>
-        <span className='slider round'></span>
+        <span className="slider round"></span>
       </label>
-      <div className='card-container' key={v4()}>
+      <div className="card-container" key={v4()}>
         {days.map((day, i) => {
           return !hideCards ? (
             <Card

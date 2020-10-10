@@ -38,8 +38,8 @@ const TaskForm = () => {
       id: v4(),
     };
     setTaskInput('');
-    setHours('');
-    setMinutes('');
+    setHours(0);
+    setMinutes(0);
     setSuccessMessage('Task added');
 
     dispatch(addTask(task, parseInt(e.target.dataset.id)));
