@@ -11,40 +11,35 @@ const TaskForm = () => {
   const categories = useSelector((state) => state.categories.cat);
   const { monthName } = useSelector((state) => state.month.currentMonth);
   const [taskInput, setTaskInput] = useState('');
-  const [points, setPoints] = useState('');
   const [error, setError] = useState('');
-  const [duration, setDuration] = useState('');
-  const [timeType, setTimeType] = useState('min');
+  const [minutes, setMinutes] = useState(0);
+  const [hours, setHours] = useState(0);
   const [category, setCategory] = useState('Guitar');
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (points === '' && taskInput === '') {
+    if (taskInput === '') {
       setError('Fields are missing!');
       return;
     } else if (taskInput === '') {
       setError('Task is missing');
       return;
-    } else if (points === '') {
-      setError('Points are missing');
-      return;
-    } else if (duration === '') {
-      return setError('Duration is missing');
     }
 
     const task = {
       name: taskInput,
       completed: false,
-      duration,
-      timeType,
+      duration: {
+        minutes: parseInt(minutes) < 0 ? parseInt(minutes) * -1 : minutes,
+        hours: parseInt(hours) < 0 ? parseInt(hours) * -1 : hours,
+      },
       category,
-      points: points < 0 ? points * -1 : points,
       id: v4(),
     };
     setTaskInput('');
-    setPoints('');
-    setDuration('');
+    setHours('');
+    setMinutes('');
     setSuccessMessage('Task added');
 
     dispatch(addTask(task, parseInt(e.target.dataset.id)));
@@ -56,18 +51,18 @@ const TaskForm = () => {
   };
 
   return (
-    <div className='form-container'>
+    <div className="form-container">
       <form
         id={`task-form-${currentCard}`}
-        className='create-task-form'
+        className="create-task-form"
         data-id={currentCard}
         onSubmit={(e) => handleSubmit(e)}
       >
         <h3>Create new tasks...</h3>
         <input
-          className='create-task-form__item task'
-          placeholder='Task...'
-          type='text'
+          className="create-task-form__item task"
+          placeholder="Task..."
+          type="text"
           autoFocus={true}
           value={taskInput}
           onChange={(e) => {
@@ -75,33 +70,34 @@ const TaskForm = () => {
             setTaskInput(e.target.value);
           }}
         ></input>
+        <label htmlFor="hours">Hours:</label>
         <input
-          placeholder='Points...'
-          type='number'
-          value={points}
-          className='create-task-form__item'
+          name="hours"
+          className="create-task-form__item"
+          type="number"
+          value={hours}
+          onFocus={(e) => !hours && setHours('')}
+          onBlur={(e) => !hours && setHours(0)}
           onChange={(e) => {
             clearErrorAndSuccess();
-            setPoints(e.target.value);
+            setHours(e.target.value);
           }}
         ></input>
+        <label htmlFor="minutes">Minutes:</label>
         <input
-          className='create-task-form__item'
-          type='number'
-          placeholder='Duration...'
-          value={duration}
+          name="minutes"
+          className="create-task-form__item"
+          type="number"
+          onFocus={(e) => !minutes && setMinutes('')}
+          onBlur={(e) => !minutes && setMinutes(0)}
+          value={minutes}
           onChange={(e) => {
             clearErrorAndSuccess();
-            setDuration(e.target.value);
+            setMinutes(e.target.value);
           }}
         ></input>
-        <select onChange={(e) => setTimeType(e.target.value)}>
-          <option value='min'>Minute(s)</option>
-          <option value='h'>Hour(s)</option>
-        </select>
         <select
           onChange={(e) => {
-            console.log(e.target.value);
             setCategory(e.target.value);
           }}
         >
@@ -117,8 +113,8 @@ const TaskForm = () => {
         </select>
         {error ? <p>{error}</p> : <p></p>}
         {successMessage ? <p>{successMessage}</p> : <p></p>}
-        <div className='create-task-form__buttons'>
-          <button type='submit'>Add</button>
+        <div className="create-task-form__buttons">
+          <button type="submit">Add</button>
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -134,8 +130,3 @@ const TaskForm = () => {
 };
 
 export default TaskForm;
-
-// <option value='Gaming'>Gaming</option>
-//           <option value='Fitness'>Fitness</option>
-//           <option value='Studying'>Studiying</option>
-//           <option value='Guitar'>Guitar</option>

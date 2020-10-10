@@ -1,7 +1,9 @@
 import { MonthTypes } from './month.types';
 import moment from 'moment';
+
 const currentMonth = moment().format('MMMM');
 const currentYear = moment().format('YYYY');
+
 const createData = (name) => {
   let dayArray = [];
   const monthData = [];
@@ -12,7 +14,6 @@ const createData = (name) => {
     while (i > 0) {
       const day = {
         dayNr: i,
-        totalPoints: 0,
         tasks: [],
       };
       dayArray.push(day);
@@ -22,7 +23,6 @@ const createData = (name) => {
       monthName: name,
       amountOfDays: daysInMonth,
       days: dayArray.reverse(),
-      totalPoints: 0,
     };
     return monthObj;
   }
@@ -37,7 +37,6 @@ const createData = (name) => {
     while (j > 0) {
       const day = {
         dayNr: j,
-        totalPoints: 0,
         tasks: [],
       };
       dayArray.push(day);
@@ -47,7 +46,6 @@ const createData = (name) => {
       monthName,
       amountOfDays: daysInMonth,
       days: dayArray.reverse(),
-      totalPoints: 0,
     };
 
     localStorage.setItem(monthObj.monthName, JSON.stringify(monthObj));
@@ -96,17 +94,6 @@ export const addTask = (task, number) => (dispatch) => {
 
 export const deleteTask = (id, number) => (dispatch) => {
   dispatch({ type: MonthTypes.DELETE_TASK, payload: { id, number } });
-};
-
-export const addPoints = (amount, number) => (dispatch) => {
-  dispatch({
-    type: MonthTypes.ADD_POINTS,
-    payload: { amount, number },
-  });
-};
-
-export const removePoints = (amount, number) => (dispatch) => {
-  dispatch({ type: MonthTypes.REMOVE_POINTS, payload: { amount, number } });
 };
 
 export const setCompleted = (value, number, id) => (dispatch) => {

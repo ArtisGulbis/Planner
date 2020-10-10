@@ -14,12 +14,8 @@ const Calendar = () => {
   const currentDay = moment().format('DD');
   const currMonth = moment().format('MMMM');
   const dispatch = useDispatch();
-  // const [hideCards, setHideCards] = useState(false);
   const monthName = useSelector((state) => state.month.currentMonth.monthName);
   const { hideCards } = useSelector((state) => state.user);
-  const totalPoints = useSelector(
-    (state) => state.month.currentMonth.totalPoints
-  );
   const days = useSelector((state) => state.month.currentMonth.days);
   useEffect(() => {
     dispatch(setData());
@@ -30,7 +26,6 @@ const Calendar = () => {
   return (
     <div className='calendar-container'>
       <h1 className='month-name'>{monthName}</h1>
-      <h2>{totalPoints}</h2>
       <label className='switch'>
         <input
           type='checkbox'

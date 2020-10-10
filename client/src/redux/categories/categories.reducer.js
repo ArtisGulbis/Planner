@@ -13,7 +13,7 @@ const formatTime = (currentTime, timeToAdd, type) => {
   //currentTimeHour, currentTimeMinute
   const [cth, ctm] = [currentTime.hour, currentTime.minute];
   //timeToAddHour, timeToAddMinute
-  const [ttah, ttam] = [timeToAdd.hour, timeToAdd.minute];
+  const [ttah, ttam] = [timeToAdd.hours, timeToAdd.minutes];
 
   if (type === 'add') {
     //add hours and minutes
@@ -67,8 +67,8 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
     categories,
     month,
     category,
-    hour,
-    minute,
+    hours,
+    minutes,
     filteredCategory,
     newTime,
     newData,
@@ -104,10 +104,10 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:
-      ({ category, hour, minute, monthName } = action.payload);
+      ({ category, hours, minutes, monthName } = action.payload);
       [filteredMonth] = filterMonth(state, monthName);
       [filteredCategory] = filterCategory(filteredMonth, category);
-      newTime = formatTime(filteredCategory.time, { hour, minute }, 'add');
+      newTime = formatTime(filteredCategory.time, { hours, minutes }, 'add');
       newData = updateTime(filteredMonth, newTime, category);
       filteredMonth.categories = [...newData];
       saveToStorage(filteredMonth);
@@ -119,10 +119,10 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.REMOVE_TIME_FROM_CATEGORY:
-      ({ category, hour, minute, monthName } = action.payload);
+      ({ category, hours, minutes, monthName } = action.payload);
       [filteredMonth] = filterMonth(state, monthName);
       [filteredCategory] = filterCategory(filteredMonth, category);
-      newTime = formatTime(filteredCategory.time, { hour, minute });
+      newTime = formatTime(filteredCategory.time, { hours, minutes });
       newData = updateTime(filteredMonth, newTime, category);
       filteredMonth.categories = [...newData];
       saveToStorage(filteredMonth);

@@ -27,7 +27,6 @@ const Card = ({ monthDayNumber, tasks, totalPoints }) => {
       } ${checkIfPassedDay() ? 'passed-day' : ''}`}
     >
       <h3>{monthDayNumber}</h3>
-      <p>Points: {totalPoints}</p>
       {tasks.map((task) => (
         <Task key={task.id} task={task} monthDayNumber={monthDayNumber}></Task>
       ))}

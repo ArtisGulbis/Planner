@@ -7,7 +7,6 @@ const INITAL_STATE = {
     monthName: '',
     amountOfDays: 0,
     days: [],
-    totalPoints: 0,
   },
 };
 
@@ -111,31 +110,6 @@ const monthReducer = (state = INITAL_STATE, action) => {
           ...state.currentMonth,
           days: [...state.currentMonth.days],
         },
-      };
-
-    case MonthTypes.ADD_POINTS:
-      filteredDay = filterDay(state, action);
-      filteredDay[0].totalPoints += parseInt(action.payload.amount);
-      state.currentMonth.totalPoints =
-        parseInt(state.currentMonth.totalPoints) +
-        parseInt(action.payload.amount);
-
-      replaceMonthData(state);
-
-      saveToStorage(state);
-      return {
-        ...state,
-      };
-    case MonthTypes.REMOVE_POINTS:
-      filteredDay = filterDay(state, action);
-      filteredDay[0].totalPoints -= parseInt(action.payload.amount);
-      state.currentMonth.totalPoints =
-        parseInt(state.currentMonth.totalPoints) -
-        parseInt(action.payload.amount);
-      replaceMonthData(state);
-      saveToStorage(state);
-      return {
-        ...state,
       };
     case MonthTypes.SET_COMPLETED:
       filteredDay = filterDay(state, action);

@@ -2,9 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteTask,
-  addPoints,
   setCompleted,
-  removePoints,
 } from '../../redux/month/month.actions';
 import {
   addTimeToCategory,
@@ -18,23 +16,21 @@ const Task = ({ task, monthDayNumber }) => {
   const handleChange = (e) => {
     dispatch(setCompleted(!task.completed, monthDayNumber, task.id));
     if (task.completed) {
-      dispatch(addPoints(task.points, monthDayNumber));
       dispatch(
         addTimeToCategory({
           monthName,
           category: task.category,
-          hour: task.timeType === 'h' ? parseInt(task.duration) : 0,
-          minute: task.timeType === 'min' ? parseInt(task.duration) : 0,
+          hours: parseInt(task.duration.hours),
+          minutes: parseInt(task.duration.minutes),
         })
       );
     } else if (!task.completed) {
-      dispatch(removePoints(task.points, monthDayNumber));
       dispatch(
         removeTimeFromCategory({
           monthName,
           category: task.category,
-          hour: task.timeType === 'h' ? parseInt(task.duration) : 0,
-          minute: task.timeType === 'min' ? parseInt(task.duration) : 0,
+          hours: parseInt(task.duration.hours),
+          minutes: parseInt(task.duration.minutes),
         })
       );
     }
@@ -46,8 +42,8 @@ const Task = ({ task, monthDayNumber }) => {
       removeTimeFromCategory({
         monthName,
         category: task.category,
-        hour: task.timeType === 'h' ? parseInt(task.duration) : 0,
-        minute: task.timeType === 'min' ? parseInt(task.duration) : 0,
+        hours: parseInt(task.duration.hours),
+        minutes: parseInt(task.duration.minutes),
       })
     );
   };
@@ -60,8 +56,7 @@ const Task = ({ task, monthDayNumber }) => {
         onChange={(e) => handleChange(e)}
       ></input>
       <p>{task.name}</p>
-      <p>{task.points}</p>
-      <p>{`${task.duration} ${task.timeType}`}</p>
+      <p>{`${task.duration.hours} h ${task.duration.minutes} min`}</p>
       <button onClick={handleOnClick}>X</button>
     </div>
   );
