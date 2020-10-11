@@ -31,6 +31,7 @@ const App = () => {
     dispatch(resetCategoryData(monthName));
     dispatch(loadCategoryData());
   };
+
   return (
     <div className={`${isCreating ? 'stop-scrolling ' : ''}`}>
       <Sidebar></Sidebar>
