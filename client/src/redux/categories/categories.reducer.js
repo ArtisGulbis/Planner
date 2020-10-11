@@ -64,8 +64,8 @@ const filterMonth = (state, month) => {
 
 const categoriesReducer = (state = INITIAL_STATE, action) => {
   let storageData,
-    categories,
     month,
+    categories,
     category,
     hours,
     minutes,

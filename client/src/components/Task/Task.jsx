@@ -49,10 +49,10 @@ const Task = ({ task, monthDayNumber }) => {
     return currentCategories.includes(category);
   };
 
-  const handleOnClick = () => {
+  const handleDelete = () => {
     dispatch(deleteTask(task.id, monthDayNumber));
 
-    if (checkForCategory(task.category)) {
+    if (checkForCategory(task.category) && task.completed) {
       dispatch(
         removeTimeFromCategory({
           monthName,
@@ -98,7 +98,7 @@ const Task = ({ task, monthDayNumber }) => {
       <p>{shortenText(task.name)}</p>
       {task.category === 'None' ? (
         <div style={{ display: 'inline' }}>
-          <button onClick={handleOnClick}>X</button>
+          <button onClick={handleDelete}>X</button>
         </div>
       ) : (
         <div style={{ display: 'inline' }}>
@@ -106,7 +106,7 @@ const Task = ({ task, monthDayNumber }) => {
           <p>{`${parseInt(task.duration.hours)} h ${parseInt(
             task.duration.minutes
           )} min`}</p>
-          <button onClick={handleOnClick}>X</button>
+          <button onClick={handleDelete}>X</button>
         </div>
       )}
     </div>

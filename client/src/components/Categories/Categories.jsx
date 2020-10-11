@@ -45,18 +45,17 @@ const Categories = () => {
         c.month === monthName ? (
           <div key={i}>
             <div>
-              {c.categories.map((el, i) => {
-                if (el.name === 'None') {
-                  return;
-                }
-                return (
+              {c.categories.map((el, i) =>
+                el.name === 'None' ? (
+                  ''
+                ) : (
                   <div key={i}>
                     <p>{el.name}</p>
                     <p>{`${el.time.hour} h ${el.time.minute} min`}</p>
                     <button onClick={(e) => handleClick(c, el)}>X</button>
                   </div>
-                );
-              })}
+                )
+              )}
             </div>
           </div>
         ) : (

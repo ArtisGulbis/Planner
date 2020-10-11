@@ -71,11 +71,7 @@ export const setData = () => (dispatch) => {
   } else {
     for (let i = moment().get('month'); i < 12; i++) {
       data.push(
-        JSON.parse(
-          localStorage.getItem(
-            localStorage.key(moment().month(i).format('MMMM'))
-          )
-        )
+        JSON.parse(localStorage.getItem(moment().month(i).format('MMMM')))
       );
     }
     currentMonthObj = data.filter((month) => month.monthName === currentMonth);

@@ -29,12 +29,15 @@ const TaskForm = () => {
     //eslint-disable-next-line
   }, []);
 
-  console.log(category);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (taskInput === '') {
       setError('Task is missing!');
+      return;
+    }
+
+    if ((minutes || hours) === 0) {
+      setError('Change category to "None" if no time is provided');
       return;
     }
 
