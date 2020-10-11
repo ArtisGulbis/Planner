@@ -6,8 +6,8 @@ import { switchCategories } from '../../redux/categories/categories.actions';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const monthData = useSelector((state) => state.month.monthData);
-  const { monthName } = useSelector((state) => state.month.currentMonth);
+  const monthData = useSelector((state) => state.monthReducer.monthData);
+  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
   const handleClick = (e) => {
     //to prevent unnecessary loads
     if (monthName === e.target.textContent) {

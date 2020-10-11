@@ -1,7 +1,7 @@
 import { CategoriesTypes } from './categories.types';
 
 const INITIAL_STATE = {
-  cat: [],
+  monthCategories: [],
 };
 
 const storageName = 'categories';
@@ -59,7 +59,7 @@ const filterCategory = (month, category) => {
 };
 
 const filterMonth = (state, month) => {
-  return state.cat.filter((el) => el.month === month);
+  return state.monthCategories.filter((el) => el.month === month);
 };
 
 const categoriesReducer = (state = INITIAL_STATE, action) => {
@@ -78,7 +78,7 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
     case CategoriesTypes.LOAD_CATEGORY_DATA:
       return {
         ...state,
-        cat: [...action.payload],
+        monthCategories: [...action.payload],
       };
 
     case CategoriesTypes.ADD_NEW_CATEGORY:
@@ -91,7 +91,6 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
 
     case CategoriesTypes.REMOVE_CATEGORY:
       ({ categories, category, month } = action.payload);
-      console.log(categories);
       [filteredMonth] = filterMonth(state, month);
       [filteredCategory] = filterCategory(filteredMonth, category);
       storageData = JSON.parse(localStorage.getItem(`${storageName}-${month}`));
@@ -100,7 +99,7 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       saveToStorage(storageData);
       return {
         ...state,
-        cat: [storageData],
+        monthCategories: [storageData],
       };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:
@@ -113,7 +112,7 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       saveToStorage(filteredMonth);
       return {
         ...state,
-        cat: state.cat.map((el) =>
+        monthCategories: state.monthCategories.map((el) =>
           el.month === filteredMonth.month ? filteredMonth : el
         ),
       };
@@ -128,7 +127,7 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       saveToStorage(filteredMonth);
       return {
         ...state,
-        cat: state.cat.map((el) =>
+        monthCategories: state.monthCategories.map((el) =>
           el.month === filteredMonth.month ? filteredMonth : el
         ),
       };
@@ -140,14 +139,13 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.SWITCH_CATEGORIES:
-      //nextCategory
       storageData = JSON.parse(
         localStorage.getItem(`${storageName}-${action.payload}`)
       );
 
       return {
         ...state,
-        cat: [storageData],
+        monthCategories: [storageData],
       };
 
     default:

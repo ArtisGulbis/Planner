@@ -10,11 +10,16 @@ import './task.styles.scss';
 
 const Task = ({ task, monthDayNumber }) => {
   const dispatch = useDispatch();
-  const { monthName } = useSelector((state) => state.month.currentMonth);
-  const categories = useSelector((state) => state.categories.cat);
+  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
+  const categories = useSelector(
+    (state) => state.categoriesReducer.monthCategories
+  );
 
   const handleChange = (e) => {
     dispatch(setCompleted(!task.completed, monthDayNumber, task.id));
+    if (task.category === 'None') {
+      return;
+    }
     if (task.completed) {
       dispatch(
         addTimeToCategory({
@@ -91,10 +96,19 @@ const Task = ({ task, monthDayNumber }) => {
         onChange={(e) => handleChange(e)}
       ></input>
       <p>{shortenText(task.name)}</p>
-      <p>{`${parseInt(task.duration.hours)} h ${parseInt(
-        task.duration.minutes
-      )} min`}</p>
-      <button onClick={handleOnClick}>X</button>
+      {task.category === 'None' ? (
+        <div style={{ display: 'inline' }}>
+          <button onClick={handleOnClick}>X</button>
+        </div>
+      ) : (
+        <div style={{ display: 'inline' }}>
+          <p>{task.category}</p>
+          <p>{`${parseInt(task.duration.hours)} h ${parseInt(
+            task.duration.minutes
+          )} min`}</p>
+          <button onClick={handleOnClick}>X</button>
+        </div>
+      )}
     </div>
   );
 };

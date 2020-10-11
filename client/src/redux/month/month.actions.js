@@ -69,8 +69,14 @@ export const setData = () => (dispatch) => {
       payload: { data, currentMonth: { ...currentMonthObj[0] } },
     });
   } else {
-    for (let i = 0; i < localStorage.length; i++) {
-      data.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+    for (let i = moment().get('month'); i < 12; i++) {
+      data.push(
+        JSON.parse(
+          localStorage.getItem(
+            localStorage.key(moment().month(i).format('MMMM'))
+          )
+        )
+      );
     }
     currentMonthObj = data.filter((month) => month.monthName === currentMonth);
     dispatch({

@@ -6,10 +6,10 @@ import categoriesReducer from './categories/categories.reducer';
 import userSettingsReducer from './userSettings/userSettings.reducer';
 
 const rootReducer = combineReducers({
-  month: monthReducer,
-  form: formReducer,
-  categories: categoriesReducer,
-  user: userSettingsReducer,
+  monthReducer,
+  formReducer,
+  categoriesReducer,
+  userSettingsReducer,
 });
 
 export default rootReducer;

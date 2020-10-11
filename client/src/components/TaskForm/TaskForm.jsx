@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTask } from '../../redux/month/month.actions';
 import { v4 } from 'uuid';
@@ -7,23 +7,34 @@ import './taskform.styles.scss';
 
 const TaskForm = () => {
   const dispatch = useDispatch();
-  const { currentCard } = useSelector((state) => state.form);
-  const categories = useSelector((state) => state.categories.cat);
-  const { monthName } = useSelector((state) => state.month.currentMonth);
+  const { currentCard } = useSelector((state) => state.formReducer);
+  const categories = useSelector(
+    (state) => state.categoriesReducer.monthCategories
+  );
+  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
   const [taskInput, setTaskInput] = useState('');
   const [error, setError] = useState('');
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
-  const [category, setCategory] = useState('Guitar');
+  const [category, setCategory] = useState();
   const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    //set default category
+    categories.forEach((el) => {
+      if (el.month === monthName) {
+        setCategory(el.categories[0].name);
+      }
+    });
+    //eslint-disable-next-line
+  }, []);
+
+  console.log(category);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (taskInput === '') {
-      setError('Fields are missing!');
-      return;
-    } else if (taskInput === '') {
-      setError('Task is missing');
+      setError('Task is missing!');
       return;
     }
 
@@ -70,32 +81,38 @@ const TaskForm = () => {
             setTaskInput(e.target.value);
           }}
         ></input>
-        <label htmlFor="hours">Hours:</label>
-        <input
-          name="hours"
-          className="create-task-form__item"
-          type="number"
-          value={hours}
-          onFocus={(e) => !hours && setHours('')}
-          onBlur={(e) => !hours && setHours(0)}
-          onChange={(e) => {
-            clearErrorAndSuccess();
-            setHours(e.target.value);
-          }}
-        ></input>
-        <label htmlFor="minutes">Minutes:</label>
-        <input
-          name="minutes"
-          className="create-task-form__item"
-          type="number"
-          onFocus={(e) => !minutes && setMinutes('')}
-          onBlur={(e) => !minutes && setMinutes(0)}
-          value={minutes}
-          onChange={(e) => {
-            clearErrorAndSuccess();
-            setMinutes(e.target.value);
-          }}
-        ></input>
+        {category !== 'None' ? (
+          <div>
+            <label htmlFor="hours">Hours:</label>
+            <input
+              name="hours"
+              className="create-task-form__item"
+              type="number"
+              value={hours}
+              onFocus={(e) => !hours && setHours('')}
+              onBlur={(e) => !hours && setHours(0)}
+              onChange={(e) => {
+                clearErrorAndSuccess();
+                setHours(e.target.value);
+              }}
+            ></input>
+            <label htmlFor="minutes">Minutes:</label>
+            <input
+              name="minutes"
+              className="create-task-form__item"
+              type="number"
+              onFocus={(e) => !minutes && setMinutes('')}
+              onBlur={(e) => !minutes && setMinutes(0)}
+              value={minutes}
+              onChange={(e) => {
+                clearErrorAndSuccess();
+                setMinutes(e.target.value);
+              }}
+            ></input>
+          </div>
+        ) : (
+          ''
+        )}
         <select
           onChange={(e) => {
             setCategory(e.target.value);

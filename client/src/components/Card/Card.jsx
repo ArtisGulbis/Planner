@@ -5,11 +5,11 @@ import Task from '../Task/Task';
 import moment from 'moment';
 import { showFormForTask } from '../../redux/form/form.actions';
 
-const Card = ({ monthDayNumber, tasks, totalPoints }) => {
+const Card = ({ monthDayNumber, tasks }) => {
   const currentDay = moment().format('DD');
   const currMonth = moment().format('MMMM');
   const dispatch = useDispatch();
-  const { monthName } = useSelector((state) => state.month.currentMonth);
+  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
 
   const checkIfPassedDay = () => {
     return (

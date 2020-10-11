@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-const defaultCategories = ['Guitar', 'Fitness', 'Studying', 'Gaming'];
+const defaultCategories = ['Guitar', 'Fitness', 'Studying', 'Gaming', 'None'];
 
 export const createDefaultData = () => {
   const defaultCategoryData = [];

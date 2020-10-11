@@ -14,9 +14,11 @@ const Calendar = () => {
   const currentDay = moment().format('DD');
   const currMonth = moment().format('MMMM');
   const dispatch = useDispatch();
-  const monthName = useSelector((state) => state.month.currentMonth.monthName);
-  const { hideCards } = useSelector((state) => state.user);
-  const days = useSelector((state) => state.month.currentMonth.days);
+  const monthName = useSelector(
+    (state) => state.monthReducer.currentMonth.monthName
+  );
+  const { hideCards } = useSelector((state) => state.userSettingsReducer);
+  const days = useSelector((state) => state.monthReducer.currentMonth.days);
   useEffect(() => {
     dispatch(setData());
     dispatch(loadUserSettings());

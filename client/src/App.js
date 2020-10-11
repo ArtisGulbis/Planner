@@ -13,8 +13,10 @@ import Categories from './components/Categories/Categories';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { isCreating } = useSelector((state) => state.form);
-  const monthName = useSelector((state) => state.month.currentMonth.monthName);
+  const { isCreating } = useSelector((state) => state.formReducer);
+  const monthName = useSelector(
+    (state) => state.monthReducer.currentMonth.monthName
+  );
 
   useEffect(() => {
     dispatch(loadCategoryData());

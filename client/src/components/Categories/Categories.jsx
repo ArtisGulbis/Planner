@@ -7,8 +7,10 @@ import {
 
 const Categories = () => {
   const dispatch = useDispatch();
-  const { monthName } = useSelector((state) => state.month.currentMonth);
-  const categories = useSelector((state) => state.categories.cat);
+  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
+  const categories = useSelector(
+    (state) => state.categoriesReducer.monthCategories
+  );
   const [newCategoryName, setNewCategoryName] = useState('');
   const [error, setError] = useState('');
   const handleSubmit = (e) => {
@@ -28,15 +30,15 @@ const Categories = () => {
     <div>
       <form onSubmit={(e) => handleSubmit(e)}>
         <input
-          type='text'
-          placeholder='Category name...'
+          type="text"
+          placeholder="Category name..."
           value={newCategoryName}
           onChange={(e) => {
             setNewCategoryName(e.target.value);
             setError('');
           }}
         ></input>
-        <button type='submit'>Create new category</button>
+        <button type="submit">Create new category</button>
       </form>
       <p>{error}</p>
       {categories.map((c, i) =>
@@ -44,6 +46,9 @@ const Categories = () => {
           <div key={i}>
             <div>
               {c.categories.map((el, i) => {
+                if (el.name === 'None') {
+                  return;
+                }
                 return (
                   <div key={i}>
                     <p>{el.name}</p>
