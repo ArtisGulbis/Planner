@@ -1,22 +1,24 @@
 import { UserSettingsTypes } from './userSettings.types';
+import { currentYear } from '../utils';
 
-const defaultSettings = {
-  hideCards: false,
-};
+const defaultSettings = { hideCards: false };
 
 export const loadUserSettings = () => (dispatch) => {
-  let userSetting = JSON.parse(localStorage.getItem('userSettings'));
+  const storageData = JSON.parse(localStorage.getItem(currentYear));
+  console.log(storageData);
 
-  if (!userSetting) {
-    userSetting = defaultSettings;
+  if (!storageData?.userSettings) {
+    storageData.userSettings = { ...defaultSettings };
+    localStorage.setItem(currentYear, JSON.stringify(storageData));
     dispatch({
       type: UserSettingsTypes.LOAD_USER_SETTINGS,
-      payload: userSetting,
+      payload: storageData.userSettings,
     });
+    return;
   }
   dispatch({
     type: UserSettingsTypes.LOAD_USER_SETTINGS,
-    payload: userSetting,
+    payload: storageData.userSettings,
   });
 };
 

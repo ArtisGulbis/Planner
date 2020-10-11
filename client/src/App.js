@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Calendar from './components/Calendar/Calendar';
 import TaskForm from './components/TaskForm/TaskForm';
-import { resetData } from './redux/month/month.actions';
+import { resetData, setMonthData } from './redux/month/month.actions';
 import {
   loadCategoryData,
   resetCategoryData,
 } from './redux/categories/categories.actions';
+import { loadUserSettings } from './redux/userSettings/userSettings.actions';
 import './App.scss';
 import Sidebar from './components/Sidebar/Sidebar';
 import Categories from './components/Categories/Categories';
@@ -19,7 +20,9 @@ const App = () => {
   );
 
   useEffect(() => {
+    dispatch(setMonthData());
     dispatch(loadCategoryData());
+    dispatch(loadUserSettings());
     //eslint-disable-next-line
   }, []);
 

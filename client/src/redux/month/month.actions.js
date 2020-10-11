@@ -1,12 +1,14 @@
 import { MonthTypes } from './month.types';
+import { currentYear } from '../utils';
 import moment from 'moment';
 
 const currentMonth = moment().format('MMMM');
-const currentYear = moment().format('YYYY');
 
 const createData = (name) => {
   let dayArray = [];
-  const monthData = [];
+  const monthData = {
+    monthData: [],
+  };
   if (name) {
     const daysInMonth = moment().month(name).daysInMonth();
     let i = parseInt(daysInMonth);
@@ -48,36 +50,46 @@ const createData = (name) => {
       days: dayArray.reverse(),
     };
 
-    localStorage.setItem(monthObj.monthName, JSON.stringify(monthObj));
-
-    monthData.push(monthObj);
+    monthData.monthData.push(monthObj);
   }
+  console.log(monthData);
 
+  localStorage.setItem(currentYear, JSON.stringify(monthData));
   return monthData;
 };
 
-export const setData = () => (dispatch) => {
-  const storage = JSON.parse(localStorage.getItem(currentMonth));
+export const setMonthData = () => (dispatch) => {
+  const storage = JSON.parse(localStorage.getItem(currentYear));
   let data = [];
   let currentMonthObj;
   if (!storage) {
     //create data for the rest of the year
     data = createData();
-    currentMonthObj = data.filter((month) => month.monthName === currentMonth);
+    currentMonthObj = data.monthData.filter(
+      (month) => month.monthName === currentMonth
+    );
     dispatch({
       type: MonthTypes.SET_DATA,
-      payload: { data, currentMonth: { ...currentMonthObj[0] } },
+      payload: {
+        data: data.monthData,
+        currentMonth: { ...currentMonthObj[0] },
+      },
     });
   } else {
-    for (let i = moment().get('month'); i < 12; i++) {
-      data.push(
-        JSON.parse(localStorage.getItem(moment().month(i).format('MMMM')))
-      );
-    }
-    currentMonthObj = data.filter((month) => month.monthName === currentMonth);
+    // for (let i = moment().get('month'); i < 12; i++) {
+    //   data.push(
+    //     JSON.parse(localStorage.getItem(moment().month(i).format('MMMM')))
+    //   );
+    // }
+    currentMonthObj = storage.monthData.filter(
+      (month) => month.monthName === currentMonth
+    );
     dispatch({
       type: MonthTypes.SET_DATA,
-      payload: { data, currentMonth: { ...currentMonthObj[0] } },
+      payload: {
+        data: storage.monthData,
+        currentMonth: { ...currentMonthObj[0] },
+      },
     });
   }
 };

@@ -13,8 +13,7 @@ const userSettingsReducer = (state = INITIAL_STATE, action) => {
 
   switch (action.type) {
     case UserSettingsTypes.LOAD_USER_SETTINGS:
-      localStorage.setItem(userSettings, JSON.stringify(action.payload));
-
+      console.log(action.payload);
       return {
         ...state,
         ...action.payload,

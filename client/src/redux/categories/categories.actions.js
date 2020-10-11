@@ -1,6 +1,7 @@
 import { CategoriesTypes } from './categories.types';
 import { createDefaultData, createNewDataFormMonth } from './categories.utils';
 import moment from 'moment';
+import { currentYear } from '../utils';
 
 export const addTimeToCategory = (data) => (dispatch) => {
   dispatch({
@@ -14,29 +15,44 @@ export const removeTimeFromCategory = (data) => (dispatch) => {
 };
 
 export const loadCategoryData = () => (dispatch) => {
-  const name = 'categories';
+  // const name = 'categories';
   const monthNames = [];
+
+  let obj = [];
 
   for (let i = moment().get('month'); i < 12; i++) {
     monthNames.push(moment().month(i).format('MMMM'));
   }
 
-  const data = monthNames.map((el) =>
-    JSON.parse(localStorage.getItem(`${name}-${el}`))
-  );
-
-  if (data.includes(null)) {
-    const d = createDefaultData();
-    for (let i = 0; i < d.length; i++) {
-      localStorage.setItem(`${name}-${d[i].month}`, JSON.stringify(d[i]));
-    }
-    dispatch({
-      type: CategoriesTypes.LOAD_CATEGORY_DATA,
-      payload: d,
-    });
-  } else {
-    dispatch({ type: CategoriesTypes.LOAD_CATEGORY_DATA, payload: data });
+  const data = JSON.parse(localStorage.getItem(currentYear));
+  console.log(data);
+  if (!data?.categoryData) {
+    const defaultData = createDefaultData();
+    obj = [...defaultData];
+    data.categoryData = [...obj];
+    localStorage.setItem(currentYear, JSON.stringify(data));
   }
+
+  dispatch({
+    type: CategoriesTypes.LOAD_CATEGORY_DATA,
+    payload: data.categoryData,
+  });
+  // const data = monthNames.map((el) =>
+  //   JSON.parse(localStorage.getItem(`${name}-${el}`))
+  // );
+
+  // if (data.includes(null)) {
+  //   const d = createDefaultData();
+  //   for (let i = 0; i < d.length; i++) {
+  //     localStorage.setItem(`${name}-${d[i].month}`, JSON.stringify(d[i]));
+  //   }
+  //   dispatch({
+  //     type: CategoriesTypes.LOAD_CATEGORY_DATA,
+  //     payload: d,
+  //   });
+  // } else {
+  //   dispatch({ type: CategoriesTypes.LOAD_CATEGORY_DATA, payload: data });
+  // }
 };
 
 export const addNewCategory = ({ newCategoryName, monthName }) => (

@@ -124,7 +124,6 @@ const monthReducer = (state = INITAL_STATE, action) => {
           days: [...state.currentMonth.days],
         },
       };
-
     case MonthTypes.RESET_MONTH:
       //filter month to replace
       filteredMonth = filterMonth(state);

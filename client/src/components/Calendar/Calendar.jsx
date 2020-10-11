@@ -1,12 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './calendar.styles.scss';
 import Card from '../Card/Card';
-import { setData } from '../../redux/month/month.actions';
-import {
-  loadUserSettings,
-  changeShowCards,
-} from '../../redux/userSettings/userSettings.actions';
+import { changeShowCards } from '../../redux/userSettings/userSettings.actions';
 import { v4 } from 'uuid';
 import moment from 'moment';
 
@@ -19,11 +15,6 @@ const Calendar = () => {
   );
   const { hideCards } = useSelector((state) => state.userSettingsReducer);
   const days = useSelector((state) => state.monthReducer.currentMonth.days);
-  useEffect(() => {
-    dispatch(setData());
-    dispatch(loadUserSettings());
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <div className="calendar-container">
