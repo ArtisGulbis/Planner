@@ -9,11 +9,14 @@ const Card = ({ monthDayNumber, tasks }) => {
   const currentDay = moment().format('DD');
   const currMonth = moment().format('MMMM');
   const dispatch = useDispatch();
-  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
+  const { nameOfMonth } = useSelector(
+    (state) => state.monthReducer.currentMonth
+  );
 
   const checkIfPassedDay = () => {
     return (
-      parseInt(monthDayNumber) < parseInt(currentDay) && monthName === currMonth
+      parseInt(monthDayNumber) < parseInt(currentDay) &&
+      nameOfMonth === currMonth
     );
   };
 
@@ -21,7 +24,7 @@ const Card = ({ monthDayNumber, tasks }) => {
     <div
       className={`card ${
         parseInt(currentDay) === parseInt(monthDayNumber) &&
-        currMonth === monthName
+        currMonth === nameOfMonth
           ? 'current-day'
           : ''
       } ${checkIfPassedDay() ? 'passed-day' : ''}`}

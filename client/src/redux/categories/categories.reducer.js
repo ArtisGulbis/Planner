@@ -1,10 +1,9 @@
 import { CategoriesTypes } from './categories.types';
+import { saveToStorage } from '../utils';
 
 const INITIAL_STATE = {
-  monthCategories: [],
+  data: [],
 };
-
-const storageName = 'categories';
 
 const formatTime = (currentTime, timeToAdd, type) => {
   const hourMark = 59;
@@ -41,94 +40,111 @@ const formatTime = (currentTime, timeToAdd, type) => {
     return finalTime;
   }
 };
-
-const saveToStorage = (data) => {
-  localStorage.setItem(`${storageName}-${data.month}`, JSON.stringify(data));
-};
-
 const updateTime = (month, data, category) => {
-  return month.categories.map((el) =>
-    el.name === category
+  return month.monthCategories.map((el) =>
+    el.categoryName === category
       ? { ...el, time: { hour: data.hour, minute: data.minute } }
       : el
   );
 };
 
 const filterCategory = (month, category) => {
-  return month.categories.filter((el) => el.name === category);
+  return month.monthCategories.filter((el) => el.categoryName === category);
 };
 
 const filterMonth = (state, month) => {
-  return state.monthCategories.filter((el) => el.month === month);
+  return state.data.filter((el) => el.nameOfMonth === month);
 };
 
 const categoriesReducer = (state = INITIAL_STATE, action) => {
   let storageData,
-    month,
-    categories,
+    index,
+    nameOfMonth,
     category,
     hours,
     minutes,
     filteredCategory,
     newTime,
     newData,
-    monthName,
     filteredMonth;
   switch (action.type) {
     case CategoriesTypes.LOAD_CATEGORY_DATA:
       return {
         ...state,
-        monthCategories: [...action.payload],
+        data: [...action.payload],
       };
 
     case CategoriesTypes.ADD_NEW_CATEGORY:
-      [filteredMonth] = filterMonth(state, action.payload.month);
-      filteredMonth.categories.push(action.payload.category);
-      saveToStorage(filteredMonth);
-      return {
-        ...state,
-      };
-
-    case CategoriesTypes.REMOVE_CATEGORY:
-      ({ categories, category, month } = action.payload);
-      [filteredMonth] = filterMonth(state, month);
-      [filteredCategory] = filterCategory(filteredMonth, category);
-      storageData = JSON.parse(localStorage.getItem(`${storageName}-${month}`));
-      const i = storageData.categories.findIndex((el) => el.name === category);
-      storageData.categories.splice(i, 1);
+      ({ storageData } = action.payload);
+      [filteredMonth] = filterMonth(
+        state,
+        action.payload.newCategory.nameOfMonth
+      );
+      filteredMonth.monthCategories.push(action.payload.newCategory.category);
+      index = storageData.categoryData.findIndex(
+        (el) => el.nameOfMonth === filteredMonth.nameOfMonth
+      );
+      storageData.categoryData.splice(index, 1, filteredMonth);
       saveToStorage(storageData);
       return {
         ...state,
-        monthCategories: [storageData],
+        data: [...storageData.categoryData],
+      };
+
+    case CategoriesTypes.REMOVE_CATEGORY:
+      ({ category, nameOfMonth, storageData } = action.payload);
+      [filteredMonth] = filterMonth(state, nameOfMonth);
+      [filteredCategory] = filterCategory(filteredMonth, category.categoryName);
+      filteredMonth.monthCategories = filteredMonth.monthCategories.filter(
+        (el) => el.categoryName !== category.categoryName
+      );
+      index = storageData.categoryData.findIndex(
+        (el) => el.nameOfMonth === filteredMonth.nameOfMonth
+      );
+      storageData.categoryData.splice(index, 1, filteredMonth);
+      saveToStorage(storageData);
+      return {
+        ...state,
+        data: [...storageData.categoryData],
       };
 
     case CategoriesTypes.ADD_TIME_TO_CATEGORY:
-      ({ category, hours, minutes, monthName } = action.payload);
-      [filteredMonth] = filterMonth(state, monthName);
+      ({ category, hours, minutes, nameOfMonth, storageData } = action.payload);
+      [filteredMonth] = filterMonth(state, nameOfMonth);
       [filteredCategory] = filterCategory(filteredMonth, category);
       newTime = formatTime(filteredCategory.time, { hours, minutes }, 'add');
       newData = updateTime(filteredMonth, newTime, category);
-      filteredMonth.categories = [...newData];
-      saveToStorage(filteredMonth);
+      filteredMonth.monthCategories = [...newData];
+      newData = storageData.categoryData.map((el) =>
+        el.nameOfMonth === filteredMonth.nameOfMonth ? filteredMonth : el
+      );
+      storageData.categoryData = newData;
+      saveToStorage(storageData);
       return {
         ...state,
-        monthCategories: state.monthCategories.map((el) =>
-          el.month === filteredMonth.month ? filteredMonth : el
-        ),
+        data: [
+          ...state.data.map((el) =>
+            el.nameOfMonth === filteredMonth.nameOfMonth ? filteredMonth : el
+          ),
+        ],
       };
 
     case CategoriesTypes.REMOVE_TIME_FROM_CATEGORY:
-      ({ category, hours, minutes, monthName } = action.payload);
-      [filteredMonth] = filterMonth(state, monthName);
+      ({ category, hours, minutes, nameOfMonth, storageData } = action.payload);
+      [filteredMonth] = filterMonth(state, nameOfMonth);
       [filteredCategory] = filterCategory(filteredMonth, category);
       newTime = formatTime(filteredCategory.time, { hours, minutes });
       newData = updateTime(filteredMonth, newTime, category);
-      filteredMonth.categories = [...newData];
-      saveToStorage(filteredMonth);
+      filteredMonth.monthCategories = [...newData];
+      newData = storageData.categoryData.map((month) =>
+        month.nameOfMonth === filteredMonth.nameOfMonth ? filteredMonth : month
+      );
+      storageData.categoryData = newData;
+      saveToStorage(storageData);
       return {
         ...state,
-        monthCategories: state.monthCategories.map((el) =>
-          el.month === filteredMonth.month ? filteredMonth : el
+        data: state.data.map((el) =>
+          el.nameOfMonth === filteredMonth.nameOfMonth ? filteredMonth : el
         ),
       };
 
@@ -137,17 +153,6 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
       };
-
-    case CategoriesTypes.SWITCH_CATEGORIES:
-      storageData = JSON.parse(
-        localStorage.getItem(`${storageName}-${action.payload}`)
-      );
-
-      return {
-        ...state,
-        monthCategories: [storageData],
-      };
-
     default:
       return state;
   }

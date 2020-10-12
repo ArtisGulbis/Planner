@@ -1,10 +1,11 @@
 import { MonthTypes } from './month.types';
 import moment from 'moment';
+import { saveToStorage } from '../utils';
 
 const INITAL_STATE = {
   monthData: [],
   currentMonth: {
-    monthName: '',
+    nameOfMonth: '',
     amountOfDays: 0,
     days: [],
   },
@@ -16,7 +17,7 @@ const sortMonths = (data) => {
     months.push(moment().month(i).format('MMMM'));
   }
   data.sort((a, b) => {
-    return months.indexOf(a.monthName) - months.indexOf(b.monthName);
+    return months.indexOf(a.nameOfMonth) - months.indexOf(b.nameOfMonth);
   });
 };
 
@@ -28,49 +29,41 @@ const filterDay = (state, action) => {
 
 const filterMonth = (state) => {
   return state.monthData.filter(
-    (month) => month.monthName === state.currentMonth.monthName
+    (month) => month.nameOfMonth === state.currentMonth.nameOfMonth
   );
 };
 
-const getIndefOfDay = (state, day) => {
+const getIndexfOfDay = (state, day) => {
   return state.currentMonth.days.indexOf(day);
-};
-
-const getIndexOfMonth = (fm, state) => {
-  return state.monthData.indexOf(fm[0]);
 };
 
 const filterTask = (day, action) => {
   return day.tasks.filter((task) => task.id === action.payload.id);
 };
 
-const saveToStorage = (state, otherData) => {
-  if (otherData) {
-    return localStorage.setItem(otherData.monthName, JSON.stringify(otherData));
-  }
-
-  localStorage.setItem(
-    state.currentMonth.monthName,
-    JSON.stringify(state.currentMonth)
-  );
-};
-
-const replaceMonthData = (state) => {
-  const f = filterMonth(state);
-  const m = getIndexOfMonth(f, state);
-  state.monthData.splice(m, 1, state.currentMonth);
-};
-
 const monthReducer = (state = INITAL_STATE, action) => {
-  let filteredDay, index, filteredTask, taskIndex, filteredMonth;
+  let filteredDay,
+    index,
+    filteredTask,
+    taskIndex,
+    filteredMonth,
+    storageData,
+    newData;
   switch (action.type) {
     case MonthTypes.ADD_TASK_TO_DAY:
+      storageData = action.payload.storageData;
       filteredDay = filterDay(state, action);
-      index = getIndefOfDay(state, filteredDay[0]);
+      index = getIndexfOfDay(state, filteredDay[0]);
       let day = filteredDay[0];
       day.tasks.push(action.payload.task);
       state.currentMonth.days.splice(index, 1, day);
-      saveToStorage(state);
+      newData = storageData.monthData.map((el) =>
+        el.nameOfMonth === state.currentMonth.nameOfMonth
+          ? state.currentMonth
+          : el
+      );
+      storageData.monthData = newData;
+      saveToStorage(storageData);
       return {
         ...state,
         currentMonth: {
@@ -78,8 +71,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
           days: [...state.currentMonth.days],
         },
       };
-
-    case MonthTypes.SET_DATA:
+    case MonthTypes.SET_MONTH_DATA:
       const { data, currentMonth } = action.payload;
       sortMonths(data);
       return {
@@ -87,23 +79,26 @@ const monthReducer = (state = INITAL_STATE, action) => {
         monthData: [...data],
         currentMonth: { ...currentMonth },
       };
-
     case MonthTypes.DELETE_TASK:
+      storageData = action.payload.storageData;
       filteredDay = filterDay(state, action);
-      index = getIndefOfDay(state, filteredDay[0]);
+      index = getIndexfOfDay(state, filteredDay[0]);
       filteredTask = filterTask(filteredDay[0], action);
       taskIndex = filteredDay[0].tasks.indexOf(filteredTask[0]);
       filteredDay[0].tasks.splice(taskIndex, 1);
-      if (filteredDay[0].totalPoints !== 0) {
-        filteredDay[0].totalPoints -= filteredTask[0].points;
-      }
-      state.currentMonth.days.splice(index, 1, filteredDay[0]);
-      state.currentMonth.totalPoints = filteredTask[0].completed
-        ? parseInt(state.currentMonth.totalPoints) -
-          parseInt(filteredTask[0].points)
-        : state.currentMonth.totalPoints;
-      replaceMonthData(state);
-      saveToStorage(state);
+      newData = storageData.monthData.map((el) => {
+        if (el.nameOfMonth === state.currentMonth.nameOfMonth) {
+          return {
+            ...el,
+            days: el.days.map((el) =>
+              el.dayNr === filteredDay[0].dayNr ? filteredDay[0] : el
+            ),
+          };
+        }
+        return el;
+      });
+      storageData.monthData = newData;
+      saveToStorage(storageData);
       return {
         ...state,
         currentMonth: {
@@ -112,11 +107,23 @@ const monthReducer = (state = INITAL_STATE, action) => {
         },
       };
     case MonthTypes.SET_COMPLETED:
+      storageData = action.payload.storageData;
       filteredDay = filterDay(state, action);
-      index = getIndefOfDay(state, filteredDay[0]);
+      index = getIndexfOfDay(state, filteredDay[0]);
       filteredTask = filterTask(filteredDay[0], action);
       filteredTask[0].completed = action.payload.completed;
-      saveToStorage(state);
+      newData = storageData.monthData.map((month) =>
+        month.nameOfMonth === state.currentMonth.nameOfMonth
+          ? {
+              ...month,
+              days: month.days.map((day) =>
+                day.dayNr === filteredDay[0].dayNr ? filteredDay[0] : day
+              ),
+            }
+          : month
+      );
+      storageData.monthData = newData;
+      saveToStorage(storageData);
       return {
         ...state,
         currentMonth: {
@@ -129,7 +136,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
       filteredMonth = filterMonth(state);
       //index of the month to be replaced in state
       const i = state.monthData.findIndex(
-        (month) => month.monthName === filteredMonth[0].monthName
+        (month) => month.nameOfMonth === filteredMonth[0].nameOfMonth
       );
       //replace it
       state.monthData.splice(i, 1, action.payload);
@@ -145,7 +152,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
     case MonthTypes.SWITCH_MONTH:
       //nm -> nextMonth
       const nm = state.monthData.filter(
-        (month) => month.monthName === action.payload
+        (month) => month.nameOfMonth === action.payload
       );
 
       const nextMonth = nm[0];

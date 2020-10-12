@@ -15,8 +15,8 @@ import Categories from './components/Categories/Categories';
 const App = () => {
   const dispatch = useDispatch();
   const { isCreating } = useSelector((state) => state.formReducer);
-  const monthName = useSelector(
-    (state) => state.monthReducer.currentMonth.monthName
+  const nameOfMonth = useSelector(
+    (state) => state.monthReducer.currentMonth.nameOfMonth
   );
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const App = () => {
   }, []);
 
   const handleClick = () => {
-    dispatch(resetData(monthName));
-    dispatch(resetCategoryData(monthName));
+    dispatch(resetData(nameOfMonth));
+    dispatch(resetCategoryData(nameOfMonth));
     dispatch(loadCategoryData());
   };
 

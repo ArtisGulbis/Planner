@@ -1,5 +1,5 @@
 import { MonthTypes } from './month.types';
-import { currentYear } from '../utils';
+import { currentYear, loadStorageData } from '../utils';
 import moment from 'moment';
 
 const currentMonth = moment().format('MMMM');
@@ -22,7 +22,7 @@ const createData = (name) => {
       i--;
     }
     const monthObj = {
-      monthName: name,
+      nameOfMonth: name,
       amountOfDays: daysInMonth,
       days: dayArray.reverse(),
     };
@@ -30,7 +30,7 @@ const createData = (name) => {
   }
   for (let i = moment().get('month'); i < 12; i++) {
     dayArray = [];
-    const monthName = moment().month(i).format('MMMM');
+    const nameOfMonth = moment().month(i).format('MMMM');
 
     const month = moment().month(i).format('M');
     const dateToCheck = `${currentYear}-${month}`;
@@ -45,15 +45,13 @@ const createData = (name) => {
       j--;
     }
     const monthObj = {
-      monthName,
+      nameOfMonth,
       amountOfDays: daysInMonth,
       days: dayArray.reverse(),
     };
 
     monthData.monthData.push(monthObj);
   }
-  console.log(monthData);
-
   localStorage.setItem(currentYear, JSON.stringify(monthData));
   return monthData;
 };
@@ -66,26 +64,21 @@ export const setMonthData = () => (dispatch) => {
     //create data for the rest of the year
     data = createData();
     currentMonthObj = data.monthData.filter(
-      (month) => month.monthName === currentMonth
+      (month) => month.nameOfMonth === currentMonth
     );
     dispatch({
-      type: MonthTypes.SET_DATA,
+      type: MonthTypes.SET_MONTH_DATA,
       payload: {
         data: data.monthData,
         currentMonth: { ...currentMonthObj[0] },
       },
     });
   } else {
-    // for (let i = moment().get('month'); i < 12; i++) {
-    //   data.push(
-    //     JSON.parse(localStorage.getItem(moment().month(i).format('MMMM')))
-    //   );
-    // }
     currentMonthObj = storage.monthData.filter(
-      (month) => month.monthName === currentMonth
+      (month) => month.nameOfMonth === currentMonth
     );
     dispatch({
-      type: MonthTypes.SET_DATA,
+      type: MonthTypes.SET_MONTH_DATA,
       payload: {
         data: storage.monthData,
         currentMonth: { ...currentMonthObj[0] },
@@ -103,23 +96,32 @@ export const setDays = (days) => (dispatch) => {
 };
 
 export const addTask = (task, number) => (dispatch) => {
-  dispatch({ type: MonthTypes.ADD_TASK_TO_DAY, payload: { task, number } });
-};
-
-export const deleteTask = (id, number) => (dispatch) => {
-  dispatch({ type: MonthTypes.DELETE_TASK, payload: { id, number } });
-};
-
-export const setCompleted = (value, number, id) => (dispatch) => {
+  const storageData = loadStorageData();
   dispatch({
-    type: MonthTypes.SET_COMPLETED,
-    payload: { completed: value, number, id },
+    type: MonthTypes.ADD_TASK_TO_DAY,
+    payload: { task, number, storageData },
   });
 };
 
-export const resetData = (monthName) => (dispatch) => {
-  localStorage.removeItem(monthName);
-  const data = createData(monthName);
+export const deleteTask = (id, number) => (dispatch) => {
+  const storageData = loadStorageData();
+  dispatch({
+    type: MonthTypes.DELETE_TASK,
+    payload: { id, number, storageData },
+  });
+};
+
+export const setCompleted = (value, number, id) => (dispatch) => {
+  const storageData = loadStorageData();
+  dispatch({
+    type: MonthTypes.SET_COMPLETED,
+    payload: { completed: value, number, id, storageData },
+  });
+};
+
+export const resetData = (nameOfMonth) => (dispatch) => {
+  localStorage.removeItem(nameOfMonth);
+  const data = createData(nameOfMonth);
   dispatch({ type: MonthTypes.RESET_MONTH, payload: data });
 };
 

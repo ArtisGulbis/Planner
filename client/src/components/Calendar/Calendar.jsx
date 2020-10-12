@@ -11,11 +11,10 @@ const Calendar = () => {
   const currMonth = moment().format('MMMM');
   const dispatch = useDispatch();
   const monthName = useSelector(
-    (state) => state.monthReducer.currentMonth.monthName
+    (state) => state.monthReducer.currentMonth.nameOfMonth
   );
   const { hideCards } = useSelector((state) => state.userSettingsReducer);
   const days = useSelector((state) => state.monthReducer.currentMonth.days);
-
   return (
     <div className="calendar-container">
       <h1 className="month-name">{monthName}</h1>

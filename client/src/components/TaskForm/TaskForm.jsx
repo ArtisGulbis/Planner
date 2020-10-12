@@ -8,10 +8,10 @@ import './taskform.styles.scss';
 const TaskForm = () => {
   const dispatch = useDispatch();
   const { currentCard } = useSelector((state) => state.formReducer);
-  const categories = useSelector(
-    (state) => state.categoriesReducer.monthCategories
+  const categories = useSelector((state) => state.categoriesReducer.data);
+  const { nameOfMonth } = useSelector(
+    (state) => state.monthReducer.currentMonth
   );
-  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
   const [taskInput, setTaskInput] = useState('');
   const [error, setError] = useState('');
   const [minutes, setMinutes] = useState(0);
@@ -22,8 +22,8 @@ const TaskForm = () => {
   useEffect(() => {
     //set default category
     categories.forEach((el) => {
-      if (el.month === monthName) {
-        setCategory(el.categories[0].name);
+      if (el.nameOfMonth === nameOfMonth) {
+        setCategory(el.monthCategories[0].categoryName);
       }
     });
     //eslint-disable-next-line
@@ -35,8 +35,7 @@ const TaskForm = () => {
       setError('Task is missing!');
       return;
     }
-
-    if ((minutes || hours) === 0) {
+    if (minutes === 0 && hours === 0 && category !== 'None') {
       setError('Change category to "None" if no time is provided');
       return;
     }
@@ -45,8 +44,8 @@ const TaskForm = () => {
       name: taskInput,
       completed: false,
       duration: {
-        minutes: parseInt(minutes) < 0 ? parseInt(minutes) * -1 : minutes,
         hours: parseInt(hours) < 0 ? parseInt(hours) * -1 : hours,
+        minutes: parseInt(minutes) < 0 ? parseInt(minutes) * -1 : minutes,
       },
       category,
       id: v4(),
@@ -122,10 +121,10 @@ const TaskForm = () => {
           }}
         >
           {categories.map((el) =>
-            el.month === monthName
-              ? el.categories.map((el, i) => (
-                  <option key={i} value={el.name}>
-                    {el.name}
+            el.nameOfMonth === nameOfMonth
+              ? el.monthCategories.map((el, i) => (
+                  <option key={i} value={el.categoryName}>
+                    {el.categoryName}
                   </option>
                 ))
               : ''

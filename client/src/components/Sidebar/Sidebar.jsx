@@ -2,27 +2,26 @@ import React from 'react';
 import './sidebar.styles.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { switchMonth } from '../../redux/month/month.actions';
-import { switchCategories } from '../../redux/categories/categories.actions';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const monthData = useSelector((state) => state.monthReducer.monthData);
-  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
+  const { nameOfMonth } = useSelector(
+    (state) => state.monthReducer.currentMonth
+  );
   const handleClick = (e) => {
     //to prevent unnecessary loads
-    if (monthName === e.target.textContent) {
+    if (nameOfMonth === e.target.textContent) {
       return;
     }
-    e.preventDefault();
     dispatch(switchMonth(e.target.textContent));
-    dispatch(switchCategories(e.target.textContent));
   };
 
   return (
     <div>
       {monthData.map((month, i) => (
         <h1 key={i} onClick={(e) => handleClick(e)}>
-          {month.monthName}
+          {month.nameOfMonth}
         </h1>
       ))}
     </div>

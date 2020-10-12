@@ -1,83 +1,71 @@
 import { CategoriesTypes } from './categories.types';
-import { createDefaultData, createNewDataFormMonth } from './categories.utils';
+import { createDefaultData, createData } from './categories.utils';
 import moment from 'moment';
-import { currentYear } from '../utils';
+import { currentYear, loadStorageData } from '../utils';
 
 export const addTimeToCategory = (data) => (dispatch) => {
+  const { category, hours, minutes, nameOfMonth } = data;
+  const storageData = loadStorageData();
   dispatch({
     type: CategoriesTypes.ADD_TIME_TO_CATEGORY,
-    payload: data,
+    payload: { category, hours, minutes, nameOfMonth, storageData },
   });
 };
 
 export const removeTimeFromCategory = (data) => (dispatch) => {
-  dispatch({ type: CategoriesTypes.REMOVE_TIME_FROM_CATEGORY, payload: data });
+  const { category, hours, minutes, nameOfMonth } = data;
+  const storageData = loadStorageData();
+  dispatch({
+    type: CategoriesTypes.REMOVE_TIME_FROM_CATEGORY,
+    payload: { category, hours, minutes, nameOfMonth, storageData },
+  });
 };
 
 export const loadCategoryData = () => (dispatch) => {
-  // const name = 'categories';
   const monthNames = [];
-
-  let obj = [];
 
   for (let i = moment().get('month'); i < 12; i++) {
     monthNames.push(moment().month(i).format('MMMM'));
   }
 
-  const data = JSON.parse(localStorage.getItem(currentYear));
-  console.log(data);
-  if (!data?.categoryData) {
+  const storageData = loadStorageData();
+
+  if (!storageData?.categoryData) {
     const defaultData = createDefaultData();
-    obj = [...defaultData];
-    data.categoryData = [...obj];
-    localStorage.setItem(currentYear, JSON.stringify(data));
+    const obj = [...defaultData];
+    storageData.categoryData = [...obj];
+    localStorage.setItem(currentYear, JSON.stringify(storageData));
   }
 
   dispatch({
     type: CategoriesTypes.LOAD_CATEGORY_DATA,
-    payload: data.categoryData,
+    payload: storageData.categoryData,
   });
-  // const data = monthNames.map((el) =>
-  //   JSON.parse(localStorage.getItem(`${name}-${el}`))
-  // );
-
-  // if (data.includes(null)) {
-  //   const d = createDefaultData();
-  //   for (let i = 0; i < d.length; i++) {
-  //     localStorage.setItem(`${name}-${d[i].month}`, JSON.stringify(d[i]));
-  //   }
-  //   dispatch({
-  //     type: CategoriesTypes.LOAD_CATEGORY_DATA,
-  //     payload: d,
-  //   });
-  // } else {
-  //   dispatch({ type: CategoriesTypes.LOAD_CATEGORY_DATA, payload: data });
-  // }
 };
 
-export const addNewCategory = ({ newCategoryName, monthName }) => (
+export const addNewCategory = ({ newCategoryName, nameOfMonth }) => (
   dispatch
 ) => {
+  const storageData = loadStorageData();
   const newCategory = {
-    month: monthName,
-    category: { name: newCategoryName, time: { hour: 0, minute: 0 } },
+    nameOfMonth,
+    category: { categoryName: newCategoryName, time: { hour: 0, minute: 0 } },
   };
-
-  dispatch({ type: CategoriesTypes.ADD_NEW_CATEGORY, payload: newCategory });
-};
-
-export const removeCategory = (data, category) => (dispatch) => {
   dispatch({
-    type: CategoriesTypes.REMOVE_CATEGORY,
-    payload: { ...data, category },
+    type: CategoriesTypes.ADD_NEW_CATEGORY,
+    payload: { newCategory, storageData },
   });
 };
 
-export const resetCategoryData = (monthName) => (dispatch) => {
-  const data = createNewDataFormMonth(monthName);
-  dispatch({ type: CategoriesTypes.RESET_CATEGORY_DATA, payload: data });
+export const removeCategory = (nameOfMonth, category) => (dispatch) => {
+  const storageData = loadStorageData();
+  dispatch({
+    type: CategoriesTypes.REMOVE_CATEGORY,
+    payload: { nameOfMonth, category, storageData },
+  });
 };
 
-export const switchCategories = (name) => (dispatch) => {
-  dispatch({ type: CategoriesTypes.SWITCH_CATEGORIES, payload: name });
+export const resetCategoryData = (nameOfMonth) => (dispatch) => {
+  const data = createData(nameOfMonth);
+  dispatch({ type: CategoriesTypes.RESET_CATEGORY_DATA, payload: data });
 };

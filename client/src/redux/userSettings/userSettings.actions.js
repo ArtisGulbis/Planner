@@ -1,11 +1,7 @@
 import { UserSettingsTypes } from './userSettings.types';
-import { currentYear } from '../utils';
+import { currentYear, loadStorageData } from '../utils';
 
 const defaultSettings = { hideCards: false };
-
-const loadStorageData = () => {
-  return JSON.parse(localStorage.getItem(currentYear));
-};
 
 const saveToLocalStorage = (data) => {
   localStorage.setItem(currentYear, JSON.stringify(data));
@@ -13,7 +9,6 @@ const saveToLocalStorage = (data) => {
 
 export const loadUserSettings = () => (dispatch) => {
   const storageData = loadStorageData();
-  console.log(storageData);
 
   if (!storageData?.userSettings) {
     storageData.userSettings = { ...defaultSettings };

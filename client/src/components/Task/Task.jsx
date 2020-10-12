@@ -10,10 +10,10 @@ import './task.styles.scss';
 
 const Task = ({ task, monthDayNumber }) => {
   const dispatch = useDispatch();
-  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
-  const categories = useSelector(
-    (state) => state.categoriesReducer.monthCategories
+  const { nameOfMonth } = useSelector(
+    (state) => state.monthReducer.currentMonth
   );
+  const categories = useSelector((state) => state.categoriesReducer.data);
 
   const handleChange = (e) => {
     dispatch(setCompleted(!task.completed, monthDayNumber, task.id));
@@ -23,7 +23,7 @@ const Task = ({ task, monthDayNumber }) => {
     if (task.completed) {
       dispatch(
         addTimeToCategory({
-          monthName,
+          nameOfMonth,
           category: task.category,
           hours: parseInt(task.duration.hours),
           minutes: parseInt(task.duration.minutes),
@@ -32,7 +32,7 @@ const Task = ({ task, monthDayNumber }) => {
     } else if (!task.completed) {
       dispatch(
         removeTimeFromCategory({
-          monthName,
+          nameOfMonth,
           category: task.category,
           hours: parseInt(task.duration.hours),
           minutes: parseInt(task.duration.minutes),
@@ -42,10 +42,12 @@ const Task = ({ task, monthDayNumber }) => {
   };
 
   const checkForCategory = (category) => {
-    const [cats] = categories.map((el) => {
-      return el.month === monthName && el.categories;
-    });
-    const currentCategories = cats.map((el) => el.name);
+    const [{ monthCategories }] = categories.filter(
+      (month) => month.nameOfMonth === nameOfMonth && month.monthCategories
+    );
+    const currentCategories = monthCategories.map(
+      (category) => category.categoryName
+    );
     return currentCategories.includes(category);
   };
 
@@ -55,7 +57,7 @@ const Task = ({ task, monthDayNumber }) => {
     if (checkForCategory(task.category) && task.completed) {
       dispatch(
         removeTimeFromCategory({
-          monthName,
+          nameOfMonth,
           category: task.category,
           hours: parseInt(task.duration.hours),
           minutes: parseInt(task.duration.minutes),

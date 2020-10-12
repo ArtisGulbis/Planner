@@ -6,25 +6,19 @@ export const createDefaultData = () => {
   const defaultCategoryData = [];
   const months = 12;
   for (let i = moment().get('month'); i < months; i++) {
-    const monthName = moment().month(i).format('MMMM');
-    const a = {
-      month: monthName,
-      categories: defaultCategories.map((el) => ({
-        name: el,
-        time: { hour: 0, minute: 0 },
-      })),
-    };
+    const nameOfMonth = moment().month(i).format('MMMM');
+    const a = createData(nameOfMonth);
 
     defaultCategoryData.push(a);
   }
   return defaultCategoryData;
 };
 
-export const createNewDataFormMonth = (monthName) => {
+export const createData = (nameOfMonth) => {
   return {
-    month: monthName,
-    categories: defaultCategories.map((el) => ({
-      name: el,
+    nameOfMonth: nameOfMonth,
+    monthCategories: defaultCategories.map((el) => ({
+      categoryName: el,
       time: { hour: 0, minute: 0 },
     })),
   };

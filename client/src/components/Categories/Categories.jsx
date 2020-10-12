@@ -7,15 +7,15 @@ import {
 
 const Categories = () => {
   const dispatch = useDispatch();
-  const { monthName } = useSelector((state) => state.monthReducer.currentMonth);
-  const categories = useSelector(
-    (state) => state.categoriesReducer.monthCategories
+  const { nameOfMonth } = useSelector(
+    (state) => state.monthReducer.currentMonth
   );
+  const categories = useSelector((state) => state.categoriesReducer.data);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [error, setError] = useState('');
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addNewCategory({ newCategoryName, monthName }));
+    dispatch(addNewCategory({ newCategoryName, nameOfMonth }));
     setNewCategoryName('');
   };
 
@@ -23,7 +23,7 @@ const Categories = () => {
     if ((category.time.hour || category.time.minute) > 0) {
       return setError('Clear time first');
     }
-    dispatch(removeCategory(month, category.name));
+    dispatch(removeCategory(month, category));
   };
 
   return (
@@ -41,22 +41,24 @@ const Categories = () => {
         <button type="submit">Create new category</button>
       </form>
       <p>{error}</p>
-      {categories.map((c, i) =>
-        c.month === monthName ? (
+      {categories.map((month, i) =>
+        month.nameOfMonth === nameOfMonth ? (
           <div key={i}>
-            <div>
-              {c.categories.map((el, i) =>
-                el.name === 'None' ? (
-                  ''
-                ) : (
-                  <div key={i}>
-                    <p>{el.name}</p>
-                    <p>{`${el.time.hour} h ${el.time.minute} min`}</p>
-                    <button onClick={(e) => handleClick(c, el)}>X</button>
-                  </div>
-                )
-              )}
-            </div>
+            {month.monthCategories.map((category, i) =>
+              category.categoryName === 'None' ? (
+                ''
+              ) : (
+                <div key={i}>
+                  <p>{category.categoryName}</p>
+                  <p>{`${category.time.hour} h ${category.time.minute} min`}</p>
+                  <button
+                    onClick={(e) => handleClick(month.nameOfMonth, category)}
+                  >
+                    X
+                  </button>
+                </div>
+              )
+            )}
           </div>
         ) : (
           ''
