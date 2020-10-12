@@ -67,5 +67,9 @@ export const removeCategory = (nameOfMonth, category) => (dispatch) => {
 
 export const resetCategoryData = (nameOfMonth) => (dispatch) => {
   const data = createData(nameOfMonth);
-  dispatch({ type: CategoriesTypes.RESET_CATEGORY_DATA, payload: data });
+  const storageData = loadStorageData();
+  dispatch({
+    type: CategoriesTypes.RESET_CATEGORY_DATA,
+    payload: { data, storageData },
+  });
 };

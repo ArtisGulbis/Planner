@@ -27,11 +27,11 @@ const filterDay = (state, action) => {
   );
 };
 
-const filterMonth = (state) => {
-  return state.monthData.filter(
-    (month) => month.nameOfMonth === state.currentMonth.nameOfMonth
-  );
-};
+// const filterMonth = (state) => {
+//   return state.monthData.filter(
+//     (month) => month.nameOfMonth === state.currentMonth.nameOfMonth
+//   );
+// };
 
 const getIndexfOfDay = (state, day) => {
   return state.currentMonth.days.indexOf(day);
@@ -45,10 +45,11 @@ const monthReducer = (state = INITAL_STATE, action) => {
   let filteredDay,
     index,
     filteredTask,
+    currentMonth,
     taskIndex,
-    filteredMonth,
     storageData,
-    newData;
+    newData,
+    data;
   switch (action.type) {
     case MonthTypes.ADD_TASK_TO_DAY:
       storageData = action.payload.storageData;
@@ -72,7 +73,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
         },
       };
     case MonthTypes.SET_MONTH_DATA:
-      const { data, currentMonth } = action.payload;
+      ({ data, currentMonth } = action.payload);
       sortMonths(data);
       return {
         ...state,
@@ -132,21 +133,17 @@ const monthReducer = (state = INITAL_STATE, action) => {
         },
       };
     case MonthTypes.RESET_MONTH:
-      //filter month to replace
-      filteredMonth = filterMonth(state);
-      //index of the month to be replaced in state
-      const i = state.monthData.findIndex(
-        (month) => month.nameOfMonth === filteredMonth[0].nameOfMonth
+      ({ data, storageData } = action.payload);
+      newData = storageData.monthData.map((month) =>
+        month.nameOfMonth === data.nameOfMonth ? data : month
       );
-      //replace it
-      state.monthData.splice(i, 1, action.payload);
-      //save it to localStorage
-      saveToStorage(state, action.payload);
+      storageData.monthData = newData;
+      saveToStorage(storageData);
       return {
         ...state,
-        monthData: [...state.monthData],
+        monthData: [...storageData.monthData],
         currentMonth: {
-          ...action.payload,
+          ...data,
         },
       };
     case MonthTypes.SWITCH_MONTH:

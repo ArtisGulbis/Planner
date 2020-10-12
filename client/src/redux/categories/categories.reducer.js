@@ -66,7 +66,8 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
     filteredCategory,
     newTime,
     newData,
-    filteredMonth;
+    filteredMonth,
+    data;
   switch (action.type) {
     case CategoriesTypes.LOAD_CATEGORY_DATA:
       return {
@@ -149,9 +150,17 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       };
 
     case CategoriesTypes.RESET_CATEGORY_DATA:
-      saveToStorage(action.payload);
+      ({ data, storageData } = action.payload);
+
+      newData = storageData.categoryData.map((month) =>
+        month.nameOfMonth === data.nameOfMonth ? data : month
+      );
+      storageData.categoryData = newData;
+      saveToStorage(storageData);
+      console.log(...data.monthCategories);
       return {
         ...state,
+        data: [...storageData.categoryData],
       };
     default:
       return state;

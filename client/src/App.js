@@ -29,7 +29,6 @@ const App = () => {
   const handleClick = () => {
     dispatch(resetData(nameOfMonth));
     dispatch(resetCategoryData(nameOfMonth));
-    dispatch(loadCategoryData());
   };
 
   return (
