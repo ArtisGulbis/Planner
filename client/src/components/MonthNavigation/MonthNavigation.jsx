@@ -2,8 +2,9 @@ import React from 'react';
 import './sidebar.styles.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { switchMonth } from '../../redux/month/month.actions';
+import MonthNavigationItem from '../MonthNavigationItem/MonthNavigationItem';
 
-const Sidebar = () => {
+const MonthNavigation = () => {
   const dispatch = useDispatch();
   const monthData = useSelector((state) => state.monthReducer.monthData);
   const { nameOfMonth } = useSelector(
@@ -18,14 +19,18 @@ const Sidebar = () => {
   };
 
   return (
-    <div>
-      {monthData.map((month, i) => (
-        <h1 key={i} onClick={(e) => handleClick(e)}>
-          {month.nameOfMonth}
-        </h1>
-      ))}
-    </div>
+    <nav>
+      <ul>
+        {monthData.map((month, i) => (
+          <MonthNavigationItem
+            key={i}
+            month={month}
+            handleClick={handleClick}
+          ></MonthNavigationItem>
+        ))}
+      </ul>
+    </nav>
   );
 };
 
-export default Sidebar;
+export default MonthNavigation;

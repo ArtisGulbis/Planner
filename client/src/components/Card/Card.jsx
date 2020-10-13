@@ -4,6 +4,7 @@ import './card.styles.scss';
 import Task from '../Task/Task';
 import moment from 'moment';
 import { showFormForTask } from '../../redux/form/form.actions';
+import CustomButton from '../CustomButton/CustomButton';
 
 const Card = ({ monthDayNumber, tasks }) => {
   const currentDay = moment().format('DD');
@@ -19,9 +20,12 @@ const Card = ({ monthDayNumber, tasks }) => {
       nameOfMonth === currMonth
     );
   };
+  const handleClick = () => {
+    dispatch(showFormForTask(monthDayNumber));
+  };
 
   return (
-    <div
+    <li
       className={`card ${
         parseInt(currentDay) === parseInt(monthDayNumber) &&
         currMonth === nameOfMonth
@@ -30,17 +34,21 @@ const Card = ({ monthDayNumber, tasks }) => {
       } ${checkIfPassedDay() ? 'passed-day' : ''}`}
     >
       <h3>{monthDayNumber}</h3>
-      {tasks.map((task) => (
-        <Task key={task.id} task={task} monthDayNumber={monthDayNumber}></Task>
-      ))}
+      <ul>
+        {tasks.map((task) => (
+          <Task
+            key={task.id}
+            task={task}
+            monthDayNumber={monthDayNumber}
+          ></Task>
+        ))}
+      </ul>
       {checkIfPassedDay() ? (
         ''
       ) : (
-        <button onClick={(e) => dispatch(showFormForTask(monthDayNumber))}>
-          Add
-        </button>
+        <CustomButton onClick={handleClick}>Add</CustomButton>
       )}
-    </div>
+    </li>
   );
 };
 

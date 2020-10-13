@@ -56,7 +56,7 @@ const createData = (name) => {
   return monthData;
 };
 
-export const setMonthData = () => (dispatch) => {
+export const loadMonthData = () => (dispatch) => {
   const storage = JSON.parse(localStorage.getItem(currentYear));
   let data = [];
   let currentMonthObj;
@@ -67,7 +67,7 @@ export const setMonthData = () => (dispatch) => {
       (month) => month.nameOfMonth === currentMonth
     );
     dispatch({
-      type: MonthTypes.SET_MONTH_DATA,
+      type: MonthTypes.LOAD_MONTH_DATA,
       payload: {
         data: data.monthData,
         currentMonth: { ...currentMonthObj[0] },
@@ -78,7 +78,7 @@ export const setMonthData = () => (dispatch) => {
       (month) => month.nameOfMonth === currentMonth
     );
     dispatch({
-      type: MonthTypes.SET_MONTH_DATA,
+      type: MonthTypes.LOAD_MONTH_DATA,
       payload: {
         data: storage.monthData,
         currentMonth: { ...currentMonthObj[0] },

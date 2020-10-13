@@ -72,7 +72,7 @@ const monthReducer = (state = INITAL_STATE, action) => {
           days: [...state.currentMonth.days],
         },
       };
-    case MonthTypes.SET_MONTH_DATA:
+    case MonthTypes.LOAD_MONTH_DATA:
       ({ data, currentMonth } = action.payload);
       sortMonths(data);
       return {

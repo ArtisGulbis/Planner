@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addTask } from '../../redux/month/month.actions';
 import { v4 } from 'uuid';
 import { showFormForTask } from '../../redux/form/form.actions';
+import NotificationMessage from '../NotificationMessage/NotificationMessage';
+import CustomButton from '../CustomButton/CustomButton';
 import './taskform.styles.scss';
 
 const TaskForm = () => {
@@ -54,6 +56,7 @@ const TaskForm = () => {
     setHours(0);
     setMinutes(0);
     setSuccessMessage('Task added');
+    setError('');
 
     dispatch(addTask(task, parseInt(e.target.dataset.id)));
   };
@@ -63,88 +66,91 @@ const TaskForm = () => {
     setSuccessMessage('');
   };
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    dispatch(showFormForTask(currentCard));
+  };
+
   return (
-    <div className="form-container">
-      <form
-        id={`task-form-${currentCard}`}
-        className="create-task-form"
-        data-id={currentCard}
-        onSubmit={(e) => handleSubmit(e)}
-      >
-        <h3>Create new tasks...</h3>
-        <input
-          className="create-task-form__item task"
-          placeholder="Task..."
-          type="text"
-          autoFocus={true}
-          value={taskInput}
-          onChange={(e) => {
-            clearErrorAndSuccess();
-            setTaskInput(e.target.value);
-          }}
-        ></input>
-        {category !== 'None' ? (
-          <div>
-            <label htmlFor="hours">Hours:</label>
-            <input
-              name="hours"
-              className="create-task-form__item"
-              type="number"
-              value={hours}
-              onFocus={(e) => !hours && setHours('')}
-              onBlur={(e) => !hours && setHours(0)}
-              onChange={(e) => {
-                clearErrorAndSuccess();
-                setHours(e.target.value);
-              }}
-            ></input>
-            <label htmlFor="minutes">Minutes:</label>
-            <input
-              name="minutes"
-              className="create-task-form__item"
-              type="number"
-              onFocus={(e) => !minutes && setMinutes('')}
-              onBlur={(e) => !minutes && setMinutes(0)}
-              value={minutes}
-              onChange={(e) => {
-                clearErrorAndSuccess();
-                setMinutes(e.target.value);
-              }}
-            ></input>
-          </div>
-        ) : (
-          ''
-        )}
-        <select
-          onChange={(e) => {
-            setCategory(e.target.value);
-          }}
-        >
-          {categories.map((el) =>
-            el.nameOfMonth === nameOfMonth
-              ? el.monthCategories.map((el, i) => (
-                  <option key={i} value={el.categoryName}>
-                    {el.categoryName}
-                  </option>
-                ))
-              : ''
-          )}
-        </select>
-        {error ? <p>{error}</p> : <p></p>}
-        {successMessage ? <p>{successMessage}</p> : <p></p>}
-        <div className="create-task-form__buttons">
-          <button type="submit">Add</button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(showFormForTask(currentCard));
+    <form
+      className="form-container create-task-form"
+      id={`task-form-${currentCard}`}
+      data-id={currentCard}
+      onSubmit={(e) => handleSubmit(e)}
+    >
+      <h3>Create new tasks...</h3>
+      <input
+        className="create-task-form__item task"
+        placeholder="Task..."
+        type="text"
+        maxLength={20}
+        autoFocus={true}
+        value={taskInput}
+        onChange={(e) => {
+          clearErrorAndSuccess();
+          setTaskInput(e.target.value);
+        }}
+      ></input>
+      {category !== 'None' ? (
+        <div>
+          <label htmlFor="hours">Hours:</label>
+          <input
+            max={99}
+            name="hours"
+            className="create-task-form__item"
+            type="number"
+            value={hours}
+            onFocus={(e) => !hours && setHours('')}
+            onBlur={(e) => !hours && setHours(0)}
+            onChange={(e) => {
+              clearErrorAndSuccess();
+              setHours(e.target.value);
             }}
-          >
-            Cancel
-          </button>
+          ></input>
+          <label htmlFor="minutes">Minutes:</label>
+          <input
+            max={999}
+            name="minutes"
+            className="create-task-form__item"
+            type="number"
+            onFocus={(e) => !minutes && setMinutes('')}
+            onBlur={(e) => !minutes && setMinutes(0)}
+            value={minutes}
+            onChange={(e) => {
+              clearErrorAndSuccess();
+              setMinutes(e.target.value);
+            }}
+          ></input>
         </div>
-      </form>
-    </div>
+      ) : (
+        ''
+      )}
+      <select
+        onChange={(e) => {
+          setCategory(e.target.value);
+        }}
+      >
+        {categories.map((el) =>
+          el.nameOfMonth === nameOfMonth
+            ? el.monthCategories.map((el, i) => (
+                <option key={i} value={el.categoryName}>
+                  {el.categoryName}
+                </option>
+              ))
+            : ''
+        )}
+      </select>
+      {error ? <NotificationMessage message={error}></NotificationMessage> : ''}
+      {successMessage ? (
+        <NotificationMessage message={successMessage}></NotificationMessage>
+      ) : (
+        ''
+      )}
+      <div className="create-task-form__buttons">
+        <CustomButton type="submit">Add</CustomButton>
+        <CustomButton onClick={(e) => handleClick(e)}>Cancel</CustomButton>
+      </div>
+    </form>
   );
 };
 

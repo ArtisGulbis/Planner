@@ -157,7 +157,6 @@ const categoriesReducer = (state = INITIAL_STATE, action) => {
       );
       storageData.categoryData = newData;
       saveToStorage(storageData);
-      console.log(...data.monthCategories);
       return {
         ...state,
         data: [...storageData.categoryData],

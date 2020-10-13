@@ -5,6 +5,8 @@ import {
   addTimeToCategory,
   removeTimeFromCategory,
 } from '../../redux/categories/categories.actions';
+import CustomButton from '../CustomButton/CustomButton';
+import TaskNoCategory from '../TaskNoCategory/TaskNoCategory';
 
 import './task.styles.scss';
 
@@ -66,53 +68,37 @@ const Task = ({ task, monthDayNumber }) => {
     }
   };
 
-  const shortenText = (text) => {
-    let newText;
-    const maxWordLength = 2;
-    const maxCharacterLength = 15;
-    const addSpaceAndLetters = 3;
-    const splitText = text.split(' ');
-    if (splitText.length >= maxWordLength) {
-      const firstTwoWords = `${splitText[0]} ${splitText[1]}`;
-
-      if (firstTwoWords.length > maxCharacterLength) {
-        newText = firstTwoWords.slice(
-          0,
-          splitText[0].length + addSpaceAndLetters
-        );
-        return `${newText}...`;
-      }
-      return `${firstTwoWords}...`;
-    } else if (splitText[0].length > maxCharacterLength) {
-      return `${splitText[0].slice(0, 15)}...`;
-    }
-    return text;
+  const createRenderData = () => {
+    return (
+      <li className="task-container" data-id={task.id}>
+        <input
+          type="checkbox"
+          checked={task.completed}
+          disabled={checkForCategory(task.category) ? false : true}
+          onChange={(e) => handleChange(e)}
+        ></input>
+        <p>{task.name}</p>
+        <p>{task.category}</p>
+        <p>{task.duration.hours !== 0 ? `${task.duration.hours} h` : ''}</p>
+        <p>
+          {task.duration.minutes !== 0 ? `${task.duration.minutes} min` : ''}
+        </p>
+        <CustomButton onClick={handleDelete}>X</CustomButton>
+      </li>
+    );
   };
 
-  return (
-    <div className="task-container" data-id={task.id}>
-      <input
-        type="checkbox"
-        checked={task.completed}
-        disabled={checkForCategory(task.category) ? false : true}
-        onChange={(e) => handleChange(e)}
-      ></input>
-      <p>{shortenText(task.name)}</p>
-      {task.category === 'None' ? (
-        <div style={{ display: 'inline' }}>
-          <button onClick={handleDelete}>X</button>
-        </div>
-      ) : (
-        <div style={{ display: 'inline' }}>
-          <p>{task.category}</p>
-          <p>{`${parseInt(task.duration.hours)} h ${parseInt(
-            task.duration.minutes
-          )} min`}</p>
-          <button onClick={handleDelete}>X</button>
-        </div>
-      )}
-    </div>
+  return task.category === 'None' ? (
+    <TaskNoCategory
+      task={task}
+      handleDelete={handleDelete}
+      checkForCategory={checkForCategory}
+      handleChange={handleChange}
+    ></TaskNoCategory>
+  ) : (
+    createRenderData()
   );
 };
+//<li className="task-container" data-id={task.id}>
 
 export default Task;
