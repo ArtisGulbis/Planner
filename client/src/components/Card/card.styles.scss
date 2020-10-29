@@ -1,10 +1,13 @@
 .card {
-  width: 19.2%;
+  // width: 20%;
+  min-width: 19rem;
+  flex-basis: 19.4rem;
+  // width: 19%;
+  flex-shrink: 0;
   height: 25rem;
   font-size: 2rem;
   background-color: palevioletred;
   margin: 0.5rem;
-
   &:hover {
     background-color: rgb(248, 130, 169);
   }

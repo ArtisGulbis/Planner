@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { switchMonth } from '../../redux/month/month.actions';
 import MonthNavigationItem from '../MonthNavigationItem/MonthNavigationItem';
 
-const MonthNavigation = () => {
+const MonthNavigation = ({ className }) => {
   const dispatch = useDispatch();
   const monthData = useSelector((state) => state.monthReducer.monthData);
   const { nameOfMonth } = useSelector(
@@ -19,7 +19,7 @@ const MonthNavigation = () => {
   };
 
   return (
-    <nav>
+    <nav className={className}>
       <ul>
         {monthData.map((month, i) => (
           <MonthNavigationItem

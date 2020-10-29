@@ -13,6 +13,9 @@ import './App.scss';
 const App = () => {
   const dispatch = useDispatch();
   const { isCreating } = useSelector((state) => state.formReducer);
+  const monthName = useSelector(
+    (state) => state.monthReducer.currentMonth.nameOfMonth
+  );
 
   useEffect(() => {
     dispatch(loadMonthData());
@@ -22,12 +25,15 @@ const App = () => {
   }, []);
 
   return (
-    <main className={`${isCreating ? 'stop-scrolling ' : ''}`}>
-      <MonthNavigation></MonthNavigation>
-      <UserSettings></UserSettings>
-      <Categories></Categories>
+    <main className={`${isCreating ? 'stop-scrolling ' : ''} grid-container`}>
+      <header className="mainMonth">
+        <h1 className="month-name">{monthName}</h1>
+      </header>
+      <UserSettings className="settings"></UserSettings>
+      <Categories className="categories"></Categories>
+      <Calendar className="cards"></Calendar>
+      <MonthNavigation className="monthNavigation"></MonthNavigation>
       {isCreating && <TaskForm></TaskForm>}
-      <Calendar></Calendar>
     </main>
   );
 };

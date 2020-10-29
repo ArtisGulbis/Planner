@@ -2,12 +2,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  width: 70vw;
+  width: 90%;
+  margin: auto;
+  background-color: red;
 }
 
-.calendar-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+// .calendar-container {
+//   position: relative;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+// }

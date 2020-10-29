@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeCategory } from '../../redux/categories/categories.actions';
 import CategoryItem from '../CategoryItem/CategoryItem';
 import CategoryForm from '../CategoryForm/CategoryForm';
-const Categories = () => {
+
+const Categories = ({ className }) => {
   const dispatch = useDispatch();
   const { nameOfMonth } = useSelector(
     (state) => state.monthReducer.currentMonth
@@ -39,7 +40,7 @@ const Categories = () => {
   };
 
   return (
-    <section>
+    <section className={className}>
       <CategoryForm nameOfMonth={nameOfMonth}></CategoryForm>
       {createRenderData()}
     </section>

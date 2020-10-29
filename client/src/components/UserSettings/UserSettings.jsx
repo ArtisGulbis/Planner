@@ -4,8 +4,9 @@ import HideCards from '../HideCards/HideCards';
 import { resetData } from '../../redux/month/month.actions';
 import { resetCategoryData } from '../../redux/categories/categories.actions';
 import CustomButton from '../CustomButton/CustomButton';
+import './userSettings.styles.scss';
 
-const UserSettings = () => {
+const UserSettings = ({ className }) => {
   const nameOfMonth = useSelector(
     (state) => state.monthReducer.currentMonth.nameOfMonth
   );
@@ -17,9 +18,11 @@ const UserSettings = () => {
   };
 
   return (
-    <section>
+    <section className={`${className} user-settings`}>
       <HideCards></HideCards>
-      <CustomButton onClick={(e) => handleClick()}>Reset</CustomButton>
+      <CustomButton classes="reset-button" onClick={(e) => handleClick()}>
+        Reset
+      </CustomButton>
     </section>
   );
 };

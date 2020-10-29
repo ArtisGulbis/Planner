@@ -5,7 +5,7 @@ import Card from '../Card/Card';
 import { v4 } from 'uuid';
 import moment from 'moment';
 
-const Calendar = () => {
+const Calendar = ({ className }) => {
   const currentDay = moment().format('DD');
   const currMonth = moment().format('MMMM');
   const monthName = useSelector(
@@ -14,8 +14,7 @@ const Calendar = () => {
   const { hideCards } = useSelector((state) => state.userSettingsReducer);
   const days = useSelector((state) => state.monthReducer.currentMonth.days);
   return (
-    <section className="calendar-container">
-      <h1 className="month-name">{monthName}</h1>
+    <section className={`${className} calendar-container`}>
       <ul className="card-container" key={v4()}>
         {days.map((day, i) => {
           return !hideCards ? (
